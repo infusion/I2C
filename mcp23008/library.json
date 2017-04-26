@@ -1,0 +1,12 @@
+{
+    "name": "MCP23008",
+    "keywords": "mcp23008, io extender",
+    "description": "A MCP23008 driver",
+    "include": "Arduino/MCP23008",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/infusion/i2c.git"
+    },
+    "frameworks": "arduino",
+    "platforms": "atmelavr"
+}

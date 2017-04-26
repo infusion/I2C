@@ -1,0 +1,41 @@
+#######################################
+# Syntax Coloring Map For MCP23017
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+MCP23017	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setPinMode	KEYWORD2
+setPullUpMode	KEYWORD2
+setPin		KEYWORD2
+getPin		KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+MCP23017_ADDRESS
+MCP23017_IODIRA
+MCP23017_IODIRB
+MCP23017_GPPUA
+MCP23017_GPPUB
+MCP23017_GPIOA
+MCP23017_GPIOB
+MCP23017_OLATA
+MCP23017_OLATB
+MCP23017_PINS
+
+
+
+
+

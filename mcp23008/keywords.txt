@@ -1,0 +1,48 @@
+#######################################
+# Syntax Coloring Map For MCP23008
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+MCP23008	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+setPinMode	KEYWORD2
+setPullUpMode	KEYWORD2
+setPin		KEYWORD2
+getPin		KEYWORD2
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+MCP23008_ADDRESS
+MCP23008_IODIR
+MCP23008_IPOL
+MCP23008_GPINTEN
+MCP23008_DEFVAL
+MCP23008_INTCON
+MCP23008_IOCON
+MCP23008_IOCON_UNUSED
+MCP23008_IOCON_INTPOL
+MCP23008_IOCON_ODR
+MCP23008_IOCON_HAEN
+MCP23008_IOCON_DISSLW
+MCP23008_IOCON_SEQOP
+MCP23008_IOCON_MIRROR
+MCP23008_IOCON_BANK_MODE
+MCP23008_IOCON_DEFAULT
+MCP23008_GPPU
+MCP23008_INTF
+MCP23008_INTCAP
+MCP23008_GPIO
+MCP23008_OLAT
+MCP23008_PINS

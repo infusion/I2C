@@ -1,0 +1,13 @@
+{
+    "name": "MCP23017",
+    "keywords": "mcp23017, io extender",
+    "description": "A MCP23017 driver",
+    "include": "Arduino/MCP23017",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/infusion/i2c.git"
+    },
+    "frameworks": "arduino",
+    "platforms": "atmelavr"
+}
+
