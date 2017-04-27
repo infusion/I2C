@@ -11,6 +11,8 @@ void MCP23017::init() {
     // It's okay, since we set all bits to the same value
     I2C::writeWord(devId, MCP23017_IODIRA, 0x0000); // set all pins on bank A/B to OUTPUT
     I2C::writeWord(devId, MCP23017_GPPUA, 0x0000); // deactivate all pull up resistors on bank A/B
+
+    I2C::readBytes(devId, MCP23017_OLATA, (uint8_t *) &values, 2); // Read current state
 }
 
 void MCP23017::setPinMode(uint8_t pin, uint8_t mode) {
@@ -19,12 +21,12 @@ void MCP23017::setPinMode(uint8_t pin, uint8_t mode) {
         return;
     }
 
-    if (mode == 0) {
+    if (mode == 1) { // OUTPUT = 1, INPUT = 0
         direction&= ~(1 << pin);
     } else {
         direction|= 1 << pin;
     }
-    I2C::writeBytes(devId, pin < 8 ? MCP23017_IODIRA : MCP23017_IODIRB, &((uint8_t *) &direction)[pin < 8 ? 0 : 1], 1);
+    I2C::writeByte(devId, pin < 8 ? MCP23017_IODIRA : MCP23017_IODIRB, ((uint8_t *) &direction)[pin < 8 ? 0 : 1]);
 }
 
 void MCP23017::setPullUpMode(uint8_t pin, uint8_t mode) {
@@ -32,20 +34,7 @@ void MCP23017::setPullUpMode(uint8_t pin, uint8_t mode) {
     if (pin >= MCP23017_PINS) {
         return;
     }
-
-    uint8_t old;
-    uint8_t reg = pin < 8 ? MCP23017_GPPUA : MCP23017_GPPUB;
-    I2C::readBytes(devId, reg, &old, 1);
-
-    // If pin >= 8, pin-= 8
-    pin%= 8;
-
-    if (mode == 0) {
-        old&= ~(1 << pin);
-    } else {
-        old|= 1 << pin;
-    }
-    I2C::writeBytes(devId, reg, &old, 1);
+    I2C::writeBit(devId, pin < 8 ? MCP23017_GPPUA : MCP23017_GPPUB, pin % 8, mode);
 }
 
 void MCP23017::setPin(uint8_t pin, uint8_t value) {
@@ -59,7 +48,12 @@ void MCP23017::setPin(uint8_t pin, uint8_t value) {
     } else {
         values|= 1 << pin;
     }
-    I2C::writeBytes(devId, pin < 8 ? MCP23017_GPIOA : MCP23017_GPIOA, &((uint8_t *) &values)[pin < 8 ? 0 : 1], 1);
+    I2C::writeByte(devId, pin < 8 ? MCP23017_GPIOA : MCP23017_GPIOA, ((uint8_t *) &values)[pin < 8 ? 0 : 1]);
+}
+
+void MCP23017::setPins(uint16_t map) { // Update all io pins at once
+    values = map;
+    I2C::writeBytes(devId, MCP23017_GPIOA, (uint8_t *) &values, 2);
 }
 
 uint8_t MCP23017::getPin(uint8_t pin) {

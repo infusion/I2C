@@ -1,6 +1,6 @@
-#include "MCP23017.h"
+#include "MCP23008.h"
 
-MCP23017 io;
+MCP23008 io;
 
 void setup() {
 
@@ -19,7 +19,7 @@ void loop() {
     io.setPin(7, x);
     delay(100);
     io.setPin(6, 1 - x);
+    delay(100);
 
     x = 1 - x;
-    delay(100);
 }

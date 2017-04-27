@@ -1,6 +1,6 @@
 
-#ifndef _MCP23008_H_
-#define _MCP23008_H_
+#ifndef _MCP23008_H
+#define _MCP23008_H
 
 #include "I2C.h"
 
@@ -66,6 +66,8 @@ public:
     void setPullUpMode(uint8_t pin, uint8_t mode);
 
     void setPin(uint8_t pin, uint8_t value);
+    
+    void setPins(uint8_t map);
 
     uint8_t getPin(uint8_t pin);
 };

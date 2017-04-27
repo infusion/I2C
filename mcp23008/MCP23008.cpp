@@ -7,10 +7,11 @@ void MCP23008::init() {
     devId = i2cOpen(1, devId, 0);
 #endif
 
-    I2C::writeByte(devId, MCP23008_IODIR, 0x00); // set all pins on bank A to INPUT
+    I2C::writeByte(devId, MCP23008_IODIR, 0x00); // set all pins on bank A to OUTPUT
     I2C::writeByte(devId, MCP23008_GPPU, 0x00); // deactivate all pull up resistors on bank A
 
-    I2C::writeByte(devId, MCP23008_IOCON, MCP23008_IOCON_DEFAULT); // Init IOCON
+    //I2C::writeByte(devId, MCP23008_IOCON, MCP23008_IOCON_DEFAULT); // Init IOCON
+    I2C::readByte(devId, MCP23017_OLATA, &values);
 }
 
 void MCP23008::setPinMode(uint8_t pin, uint8_t mode) {
@@ -19,12 +20,12 @@ void MCP23008::setPinMode(uint8_t pin, uint8_t mode) {
         return;
     }
 
-    if (mode == 0) {
+    if (mode == 1) { // OUTPUT = 1, INPUT = 0
         direction&= ~(1 << pin);
     } else {
         direction|= 1 << pin;
     }
-    I2C::writeBytes(devId, MCP23008_IODIR, &direction, 1);
+    I2C::writeByte(devId, MCP23008_IODIR, direction);
 }
 
 void MCP23008::setPullUpMode(uint8_t pin, uint8_t mode) {
@@ -32,17 +33,7 @@ void MCP23008::setPullUpMode(uint8_t pin, uint8_t mode) {
     if (pin >= MCP23008_PINS) {
         return;
     }
-
-    uint8_t old;
-    I2C::readBytes(devId, MCP23008_GPPU, &old, 1);
-
-    if (mode == 0) {
-        old&= ~(1 << pin);
-    } else {
-        old|= 1 << pin;
-    }
-    I2C::writeBytes(devId, MCP23008_GPPU, &old, 1);
-
+    I2C::writeBit(devId, MCP23008_GPPU, pin, mode);
 }
 
 void MCP23008::setPin(uint8_t pin, uint8_t value) {
@@ -56,7 +47,12 @@ void MCP23008::setPin(uint8_t pin, uint8_t value) {
     } else {
         values|= 1 << pin;
     }
-    I2C::writeBytes(devId, MCP23008_GPIO, &values, 1);
+    I2C::writeByte(devId, MCP23008_GPIO, values);
+}
+
+void MCP23008::setPins(uint8_t map) {
+    values = map;
+    I2C::writeByte(devId, MCP23017_GPIOA, values);
 }
 
 uint8_t MCP23008::getPin(uint8_t pin) {
@@ -66,6 +62,6 @@ uint8_t MCP23008::getPin(uint8_t pin) {
     }
 
     uint8_t ret;
-    I2C::readBytes(devId, MCP23008_GPIO, &ret, 1);
+    I2C::readByte(devId, MCP23008_GPIO, &ret);
     return (ret >> pin) & 1;
 }
