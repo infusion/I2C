@@ -9,9 +9,6 @@ void MCP23008::init() {
 
     I2C::writeByte(devId, MCP23008_IODIR, 0x00); // set all pins on bank A to OUTPUT
     I2C::writeByte(devId, MCP23008_GPPU, 0x00); // deactivate all pull up resistors on bank A
-
-    //I2C::writeByte(devId, MCP23008_IOCON, MCP23008_IOCON_DEFAULT); // Init IOCON
-    I2C::readByte(devId, MCP23017_OLATA, &values);
 }
 
 void MCP23008::setPinMode(uint8_t pin, uint8_t mode) {
@@ -47,12 +44,12 @@ void MCP23008::setPin(uint8_t pin, uint8_t value) {
     } else {
         values|= 1 << pin;
     }
-    I2C::writeByte(devId, MCP23008_GPIO, values);
+    I2C::writeByte(devId, MCP23008_OLAT, values);
 }
 
 void MCP23008::setPins(uint8_t map) {
     values = map;
-    I2C::writeByte(devId, MCP23017_GPIOA, values);
+    I2C::writeByte(devId, MCP23008_OLAT, values);
 }
 
 uint8_t MCP23008::getPin(uint8_t pin) {

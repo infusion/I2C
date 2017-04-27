@@ -11,8 +11,6 @@ void MCP23017::init() {
     // It's okay, since we set all bits to the same value
     I2C::writeWord(devId, MCP23017_IODIRA, 0x0000); // set all pins on bank A/B to OUTPUT
     I2C::writeWord(devId, MCP23017_GPPUA, 0x0000); // deactivate all pull up resistors on bank A/B
-
-    I2C::readBytes(devId, MCP23017_OLATA, (uint8_t *) &values, 2); // Read current state
 }
 
 void MCP23017::setPinMode(uint8_t pin, uint8_t mode) {
@@ -48,12 +46,12 @@ void MCP23017::setPin(uint8_t pin, uint8_t value) {
     } else {
         values|= 1 << pin;
     }
-    I2C::writeByte(devId, pin < 8 ? MCP23017_GPIOA : MCP23017_GPIOA, ((uint8_t *) &values)[pin < 8 ? 0 : 1]);
+    I2C::writeByte(devId, pin < 8 ? MCP23017_OLATA : MCP23017_OLATA, ((uint8_t *) &values)[pin < 8 ? 0 : 1]);
 }
 
 void MCP23017::setPins(uint16_t map) { // Update all io pins at once
     values = map;
-    I2C::writeBytes(devId, MCP23017_GPIOA, (uint8_t *) &values, 2);
+    I2C::writeBytes(devId, MCP23017_OLATA, (uint8_t *) &values, 2);
 }
 
 uint8_t MCP23017::getPin(uint8_t pin) {
