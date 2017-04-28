@@ -1,3 +1,5 @@
 *.pdf
+doc
+*.html
 .DS_Store
 _
