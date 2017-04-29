@@ -80,7 +80,7 @@ hmc5883l_datarate_t HMC5883L::getDataRate() {
     return (hmc5883l_datarate_t) ((*data >> 2) & 7);
 }
 
-void HMC5883L::setMeasurementBias(hmc5883l_bias_t bias) {
+void HMC5883L::setMeasureBias(hmc5883l_bias_t bias) {
 
     // Set xx in 011111xx
 
@@ -88,7 +88,7 @@ void HMC5883L::setMeasurementBias(hmc5883l_bias_t bias) {
     I2C::writeByte(devId, HMC5883L_CONFIG_A, bias | (*data & 124));
 }
 
-hmc5883l_bias_t HMC5883L::getMeasurementBias() {
+hmc5883l_bias_t HMC5883L::getMeasureBias() {
 
     // Get xx in 011111xx
 
@@ -100,15 +100,6 @@ hmc5883l_bias_t HMC5883L::getMeasurementBias() {
 
 // Config B Register
 
-hmc5883l_gain_t HMC5883L::getGain() {
-
-    // Get xxx in xxx00000
-
-    I2C::readByte(devId, HMC5883L_CONFIG_B, data);
-
-    return (hmc5883l_gain_t) (*data >> 5);
-}
-
 /**
  * Set magnetic field gain value
  * 
@@ -116,6 +107,9 @@ hmc5883l_gain_t HMC5883L::getGain() {
  */
 void HMC5883L::setGain(hmc5883l_gain_t gain) {
     I2C::writeByte(devId, HMC5883L_CONFIG_B, gain << 5);
+
+    // TODO:
+    // Does z need a different scaling?
 
     switch (gain) {
         case HMC5883L_GAIN_1370:
@@ -143,6 +137,15 @@ void HMC5883L::setGain(hmc5883l_gain_t gain) {
             scale = 1.0 / 230 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
     }
+}
+
+hmc5883l_gain_t HMC5883L::getGain() {
+
+    // Get xxx in xxx00000
+
+    I2C::readByte(devId, HMC5883L_CONFIG_B, data);
+
+    return (hmc5883l_gain_t) (*data >> 5);
 }
 
 
@@ -211,6 +214,27 @@ void HMC5883L::getMeasure(float *x, float *y, float *z) {
     *x = _x * scale;
     *y = _y * scale;
     *z = _z * scale;
+}
+
+// Status Register    
+
+/**
+ * Determines if the data registers are locked
+ * 
+ * @return 
+ */
+bool HMC5883L::getStatusLock() {
+    I2C::readBit(devId, HMC5883L_STATUS, HMC5883L_STATUS_LOCK_BIT, data);
+    return *data;
+}
+
+/**
+ * Determines if data in registers is ready to be read
+ * @return 
+ */
+bool HMC5883L::getStatusReady() {
+    I2C::readBit(devId, HMC5883L_STATUS, HMC5883L_STATUS_READY_BIT, data);
+    return *data;
 }
 
 // Ident Register

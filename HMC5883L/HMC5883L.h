@@ -29,6 +29,9 @@
 // Status register
 #define HMC5883L_STATUS           0x09
 
+#define HMC5883L_STATUS_READY_BIT   0
+#define HMC5883L_STATUS_LOCK_BIT    1
+
 // Ident Registers
 #define HMC5883L_IDENT_A          0x0A
 #define HMC5883L_IDENT_B          0x0B
@@ -105,8 +108,8 @@ public:
     hmc5883l_datarate_t getDataRate();
     void setDataRate(hmc5883l_datarate_t rate);
 
-    void setMeasurementBias(hmc5883l_bias_t bias);
-    hmc5883l_bias_t getMeasurementBias();
+    void setMeasureBias(hmc5883l_bias_t bias);
+    hmc5883l_bias_t getMeasureBias();
 
     // Config B Register
 
@@ -123,8 +126,12 @@ public:
     void getMeasureRaw(int16_t *x, int16_t *y, int16_t *z);
 
     void getMeasure(float *x, float *y, float *z);
-
-    float getHeading();
+    
+    // Status Register
+    
+    bool getStatusLock();
+    
+    bool getStatusReady();
 };
 
 #endif
