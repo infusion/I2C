@@ -1,5 +1,5 @@
 
-#include "HMC5883L.h"
+#include <HMC5883L.h>
 
 /**
  * Set up compass for general usage with default settings

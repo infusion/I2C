@@ -2,7 +2,7 @@
 #ifndef _MCP23008_H
 #define _MCP23008_H
 
-#include "I2C.h"
+#include <I2C.h>
 
 // Device Address with all address pins low
 #define MCP23008_ADDRESS            0x20

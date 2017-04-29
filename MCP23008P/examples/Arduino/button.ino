@@ -1,7 +1,7 @@
-#include <Wire.h>
-#include "MCP23017.h"
 
-MCP23017 io;
+#include <MCP23008.h>
+
+MCP23008 io;
   
 void setup() {
   
