@@ -45,10 +45,10 @@ typedef enum {
 } hmc5883l_averaging_t;
 
 typedef enum {
-    HMC5883L_DATARATE_0_75_HZ = 0x00,
+    HMC5883L_DATARATE_0_75HZ = 0x00,
     HMC5883L_DATARATE_1_5HZ = 0x01,
     HMC5883L_DATARATE_3HZ = 0x02,
-    HMC5883L_DATARATE_7_5HZ = 0x03,
+    HMC5883L_DATARATE_7_50HZ = 0x03,
     HMC5883L_DATARATE_15HZ = 0x04,
     HMC5883L_DATARATE_30HZ = 0x05,
     HMC5883L_DATARATE_75HZ = 0x06
@@ -126,11 +126,11 @@ public:
     void getMeasureRaw(int16_t *x, int16_t *y, int16_t *z);
 
     void getMeasure(float *x, float *y, float *z);
-    
+
     // Status Register
-    
+
     bool getStatusLock();
-    
+
     bool getStatusReady();
 };
 
