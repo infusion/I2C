@@ -2,7 +2,7 @@
 #ifndef _HMC5883L_H
 #define _HMC5883L_H
 
-#include "I2C.h"
+#include <I2C.h>
 
 #define HMC5883L_GAUSS_TO_MICROTESLA       100
 

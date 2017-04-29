@@ -1,5 +1,5 @@
 
-#include "HMC5883L.h"
+#include <HMC5883L.h>
 
 HMC5883L compass;
 
