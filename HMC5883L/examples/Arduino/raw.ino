@@ -52,7 +52,7 @@ void loop() {
 
     int16_t x, y, z;
 
-    compass.getMeasureRaw(&x, &y, &z);
+    compass.getRawMeasure(&x, &y, &z);
 
     Serial.print(x);
     Serial.print("\t");

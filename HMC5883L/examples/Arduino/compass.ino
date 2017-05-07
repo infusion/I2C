@@ -25,7 +25,7 @@ void loop() {
     int16_t x, y, z;
 
     // Read raw measure
-    compass.getMeasureRaw(&x, &y, &z);
+    compass.getRawMeasure(&x, &y, &z);
 
     // Calculate the heading when magnetometer is level (Z-axis is pointing up).
     float headingRad = atan2(y, x);

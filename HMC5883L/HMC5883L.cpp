@@ -12,8 +12,8 @@ void HMC5883L::init() {
 #endif
 
     I2C::writeByte(devId, HMC5883L_CONFIG_A,
-            // Set number of samples averaged per measurement to 8
-            (HMC5883L_AVERAGING_8 << 5) |
+            // Set number of samples averaged per measurement to 2
+            (HMC5883L_AVERAGING_2 << 5) |
             // Set rate to 15 Hz
             (HMC5883L_DATARATE_15HZ << 2) |
             // Set normal measure bias
@@ -28,21 +28,31 @@ void HMC5883L::init() {
 
 // Config A Register
 
+/**
+ * Set the number of samples that get averaged
+ * 
+ * @param samples
+ */
 void HMC5883L::setSampleAveraging(hmc5883l_averaging_t samples) {
 
     // Set xx in 0xx11111
 
     I2C::readByte(devId, HMC5883L_CONFIG_A, data);
-    I2C::writeByte(devId, HMC5883L_CONFIG_A, (samples << 5) | (*data & 31));
+    I2C::writeByte(devId, HMC5883L_CONFIG_A, SET_BITS_IN_BYTE(*data, 5, 6, samples));
 }
 
+/**
+ * Get the current number of samples averaged
+ * 
+ * @return 
+ */
 hmc5883l_averaging_t HMC5883L::getSampleAveraging() {
 
     // Get xx in 0xx11111
 
     I2C::readByte(devId, HMC5883L_CONFIG_A, data);
 
-    return (hmc5883l_averaging_t) ((*data >> 5) & 3);
+    return (hmc5883l_averaging_t) GET_BITS_FROM_BYTE(*data, 5, 6);
 }
 
 /**
@@ -68,33 +78,48 @@ void HMC5883L::setDataRate(hmc5883l_datarate_t rate) {
      */
 
     I2C::readByte(devId, HMC5883L_CONFIG_A, data);
-    I2C::writeByte(devId, HMC5883L_CONFIG_A, (rate << 2) | (*data & 99));
+    I2C::writeByte(devId, HMC5883L_CONFIG_A, SET_BITS_IN_BYTE(*data, 2, 4, rate));
 }
 
+/**
+ * Get the current data rate
+ * 
+ * @return 
+ */
 hmc5883l_datarate_t HMC5883L::getDataRate() {
 
     // Get xxx in 011xxx11
 
     I2C::readByte(devId, HMC5883L_CONFIG_A, data);
 
-    return (hmc5883l_datarate_t) ((*data >> 2) & 7);
+    return (hmc5883l_datarate_t) GET_BITS_FROM_BYTE(*data, 2, 4);
 }
 
+/**
+ * Set the measurement bias
+ * 
+ * @param bias
+ */
 void HMC5883L::setMeasureBias(hmc5883l_bias_t bias) {
 
     // Set xx in 011111xx
 
     I2C::readByte(devId, HMC5883L_CONFIG_A, data);
-    I2C::writeByte(devId, HMC5883L_CONFIG_A, bias | (*data & 124));
+    I2C::writeByte(devId, HMC5883L_CONFIG_A, SET_BITS_IN_BYTE(*data, 0, 1, bias));
 }
 
+/**
+ * Get current measurement bias
+ * 
+ * @return 
+ */
 hmc5883l_bias_t HMC5883L::getMeasureBias() {
 
     // Get xx in 011111xx
 
     I2C::readByte(devId, HMC5883L_CONFIG_A, data);
 
-    return (hmc5883l_bias_t) (*data & 3);
+    return (hmc5883l_bias_t) GET_BITS_FROM_BYTE(*data, 0, 1);
 }
 
 
@@ -106,52 +131,64 @@ hmc5883l_bias_t HMC5883L::getMeasureBias() {
  * @param gain
  */
 void HMC5883L::setGain(hmc5883l_gain_t gain) {
-    I2C::writeByte(devId, HMC5883L_CONFIG_B, gain << 5);
 
+    // Set xxx in xxx00000
+
+    I2C::writeByte(devId, HMC5883L_CONFIG_B, gain << 5);
+    
     // TODO:
     // Does z need a different scaling?
 
     switch (gain) {
         case HMC5883L_GAIN_1370:
-            scale = 1.0 / 1370 * HMC5883L_GAUSS_TO_MICROTESLA;
+            scale = 1.0 / 1370.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_1090:
-            scale = 1.0 / 1090 * HMC5883L_GAUSS_TO_MICROTESLA;
+            scale = 1.0 / 1090.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_820:
-            scale = 1.0 / 820 * HMC5883L_GAUSS_TO_MICROTESLA;
+            scale = 1.0 / 820.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_660:
-            scale = 1.0 / 660 * HMC5883L_GAUSS_TO_MICROTESLA;
+            scale = 1.0 / 660.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_440:
-            scale = 1.0 / 440 * HMC5883L_GAUSS_TO_MICROTESLA;
+            scale = 1.0 / 440.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_390:
-            scale = 1.0 / 390 * HMC5883L_GAUSS_TO_MICROTESLA;
+            scale = 1.0 / 390.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_330:
-            scale = 1.0 / 330 * HMC5883L_GAUSS_TO_MICROTESLA;
+            scale = 1.0 / 330.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_230:
-            scale = 1.0 / 230 * HMC5883L_GAUSS_TO_MICROTESLA;
+            scale = 1.0 / 230.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
     }
 }
 
+/**
+ * Get current gain setting
+ * 
+ * @return 
+ */
 hmc5883l_gain_t HMC5883L::getGain() {
 
     // Get xxx in xxx00000
 
     I2C::readByte(devId, HMC5883L_CONFIG_B, data);
 
-    return (hmc5883l_gain_t) (*data >> 5);
+    return (hmc5883l_gain_t) GET_BITS_FROM_BYTE(*data, 5, 7);
 }
-
 
 
 // MODE Register
 
+/**
+ * Sets the current meassurement mode
+ * 
+ * @param newMode
+ */
 void HMC5883L::setMeasureMode(hmc5883l_mode_t newMode) {
 
     // Set xx in 000000xx
@@ -165,13 +202,18 @@ void HMC5883L::setMeasureMode(hmc5883l_mode_t newMode) {
     }
 }
 
+/**
+ * Gets the current meassurement mode
+ * 
+ * @return 
+ */
 hmc5883l_mode_t HMC5883L::getMeasureMode() {
 
     // Get xx in 000000xx
 
     I2C::readByte(devId, HMC5883L_MODE, data);
 
-    return (hmc5883l_mode_t) (*data & 3);
+    return (hmc5883l_mode_t) GET_BITS_FROM_BYTE(*data, 0, 3);
 }
 
 
@@ -184,7 +226,7 @@ hmc5883l_mode_t HMC5883L::getMeasureMode() {
  * @param y
  * @param z
  */
-void HMC5883L::getMeasureRaw(int16_t *x, int16_t *y, int16_t *z) {
+void HMC5883L::getRawMeasure(int16_t *x, int16_t *y, int16_t *z) {
 
     if (mode == HMC5883L_MODE_SINGLE) {
         I2C::writeByte(devId, HMC5883L_MODE, HMC5883L_MODE_SINGLE);
@@ -199,17 +241,17 @@ void HMC5883L::getMeasureRaw(int16_t *x, int16_t *y, int16_t *z) {
 }
 
 /**
- * Gets normalized measure in uT
+ * Gets normalized measure in microtesla (uT)
  * 
  * @param x
  * @param y
  * @param z
  */
-void HMC5883L::getMeasure(float *x, float *y, float *z) {
+void HMC5883L::getMagneticField(float *x, float *y, float *z) {
 
     int16_t _x, _y, _z;
 
-    getMeasureRaw(&_x, &_y, &_z);
+    getRawMeasure(&_x, &_y, &_z);
 
     *x = _x * scale;
     *y = _y * scale;

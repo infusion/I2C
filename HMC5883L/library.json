@@ -1,6 +1,6 @@
 {
     "name": "HMC5883L",
-    "keywords": "HMC5883L, magnetometer, compass, i2c, sensor",
+    "keywords": "HMC5883L, magnetometer, compass, magnetic, i2c, sensor",
     "description": "A driver for 3-Axis digital compass/magnetometer Honeywell HMC5883L",
     "include": "Arduino/HMC5883L",
     "repository": {
@@ -8,9 +8,9 @@
         "url": "https://github.com/infusion/i2c.git"
     },
     "dependencies": {
-      "name": "I2C",
-      "frameworks": "arduino"
+        "name": "I2C",
+        "frameworks": "arduino"
     },
     "frameworks": "arduino",
-    "platforms": "atmelavr"
+    "platforms": ["atmelavr", "espressif", "teensy", "linux_arm"]
 }

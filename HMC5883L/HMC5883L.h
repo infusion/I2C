@@ -7,39 +7,39 @@
 #define HMC5883L_GAUSS_TO_MICROTESLA       100
 
 // Device Address, there is only one
-#define HMC5883L_ADDRESS            0x1E
+#define HMC5883L_ADDRESS             0x1E
 
 // Config register
 
-#define HMC5883L_CONFIG_A         0x00
-#define HMC5883L_CONFIG_B         0x01
+#define HMC5883L_CONFIG_A            0x00 // R/W
+#define HMC5883L_CONFIG_B            0x01 // R/W
 
 // Mode register
-#define HMC5883L_MODE             0x02
+#define HMC5883L_MODE                0x02 // R/W
 
 // Data registers
-#define HMC5883L_DATA_MSB_X          0x03
-#define HMC5883L_DATA_LSB_X          0x04
-#define HMC5883L_DATA_MSB_Z          0x05
-#define HMC5883L_DATA_LSB_Z          0x06
-#define HMC5883L_DATA_MSB_Y          0x07
-#define HMC5883L_DATA_LSB_Y          0x08
-#define HMC5883L_DATA_START         HMC5883L_DATA_MSB_X
+#define HMC5883L_DATA_MSB_X          0x03 // R
+#define HMC5883L_DATA_LSB_X          0x04 // R
+#define HMC5883L_DATA_MSB_Z          0x05 // R
+#define HMC5883L_DATA_LSB_Z          0x06 // R
+#define HMC5883L_DATA_MSB_Y          0x07 // R
+#define HMC5883L_DATA_LSB_Y          0x08 // R
+#define HMC5883L_DATA_START          HMC5883L_DATA_MSB_X
 
 // Status register
-#define HMC5883L_STATUS           0x09
+#define HMC5883L_STATUS              0x09 // R
 
-#define HMC5883L_STATUS_READY_BIT   0
-#define HMC5883L_STATUS_LOCK_BIT    1
+#define HMC5883L_STATUS_READY_BIT    0
+#define HMC5883L_STATUS_LOCK_BIT     1
 
 // Ident Registers
-#define HMC5883L_IDENT_A          0x0A
-#define HMC5883L_IDENT_B          0x0B
-#define HMC5883L_IDENT_C          0x0C
+#define HMC5883L_IDENT_A             0x0A // R
+#define HMC5883L_IDENT_B             0x0B // R
+#define HMC5883L_IDENT_C             0x0C // R
 
 typedef enum {
     HMC5883L_AVERAGING_1 = 0x00,
-    HMC5883L_AVERAGING_2 = 0x01,
+    HMC5883L_AVERAGING_2 = 0x01, // Default
     HMC5883L_AVERAGING_4 = 0x02,
     HMC5883L_AVERAGING_8 = 0x03
 } hmc5883l_averaging_t;
@@ -49,20 +49,20 @@ typedef enum {
     HMC5883L_DATARATE_1_5HZ = 0x01,
     HMC5883L_DATARATE_3HZ = 0x02,
     HMC5883L_DATARATE_7_50HZ = 0x03,
-    HMC5883L_DATARATE_15HZ = 0x04,
+    HMC5883L_DATARATE_15HZ = 0x04, // Default
     HMC5883L_DATARATE_30HZ = 0x05,
     HMC5883L_DATARATE_75HZ = 0x06
 } hmc5883l_datarate_t;
 
 typedef enum {
-    HMC5883L_BIAS_NORMAL = 0x00,
+    HMC5883L_BIAS_NORMAL = 0x00, // Default
     HMC5883L_BIAS_POSITIVE = 0x01,
     HMC5883L_BIAS_NEGATIVE = 0x02
 } hmc5883l_bias_t;
 
 typedef enum {
     HMC5883L_GAIN_1370 = 0x00,
-    HMC5883L_GAIN_1090 = 0x01,
+    HMC5883L_GAIN_1090 = 0x01, // Default
     HMC5883L_GAIN_820 = 0x02,
     HMC5883L_GAIN_660 = 0x03,
     HMC5883L_GAIN_440 = 0x04,
@@ -73,7 +73,7 @@ typedef enum {
 
 typedef enum {
     HMC5883L_MODE_CONTINUOUS = 0x00,
-    HMC5883L_MODE_SINGLE = 0x01,
+    HMC5883L_MODE_SINGLE = 0x01, // Default
     HMC5883L_MODE_IDLE = 0x02
 } hmc5883l_mode_t;
 
@@ -123,9 +123,9 @@ public:
 
     // Data Register
 
-    void getMeasureRaw(int16_t *x, int16_t *y, int16_t *z);
+    void getRawMeasure(int16_t *x, int16_t *y, int16_t *z);
 
-    void getMeasure(float *x, float *y, float *z);
+    void getMagneticField(float *x, float *y, float *z);
 
     // Status Register
 

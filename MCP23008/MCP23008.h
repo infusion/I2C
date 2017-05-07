@@ -63,7 +63,7 @@ public:
 
     void setPinMode(uint8_t pin, uint8_t mode);
 
-    void setPullUpMode(uint8_t pin, uint8_t mode);
+    void setPullUpMode(uint8_t pin, bool mode);
 
     void setPin(uint8_t pin, bool value);
     

@@ -8,9 +8,9 @@
         "url": "https://github.com/infusion/i2c.git"
     },
     "dependencies": {
-      "name": "I2C",
-      "frameworks": "arduino"
+        "name": "I2C",
+        "frameworks": "arduino"
     },
     "frameworks": "arduino",
-    "platforms": "atmelavr"
+    "platforms": ["atmelavr", "espressif", "teensy", "linux_arm"]
 }
