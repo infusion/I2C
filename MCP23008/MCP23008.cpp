@@ -33,17 +33,15 @@ void MCP23008::setPullUpMode(uint8_t pin, uint8_t mode) {
     I2C::writeBit(devId, MCP23008_GPPU, pin, mode);
 }
 
-void MCP23008::setPin(uint8_t pin, uint8_t value) {
+void MCP23008::setPin(uint8_t pin, bool value) {
 
     if (pin >= MCP23008_PINS) {
         return;
     }
 
-    if (value == 0) {
-        values&= ~(1 << pin);
-    } else {
-        values|= 1 << pin;
-    }
+    // Conditional Set/Clear bit
+    values ^= (-value ^ values) & (1 << pin);
+
     I2C::writeByte(devId, MCP23008_OLAT, values);
 }
 
@@ -52,7 +50,7 @@ void MCP23008::setPins(uint8_t map) {
     I2C::writeByte(devId, MCP23008_OLAT, values);
 }
 
-uint8_t MCP23008::getPin(uint8_t pin) {
+bool MCP23008::getPin(uint8_t pin) {
 
     if (pin >= MCP23008_PINS) {
         return 0;

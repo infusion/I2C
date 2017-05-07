@@ -65,11 +65,11 @@ public:
 
     void setPullUpMode(uint8_t pin, uint8_t mode);
 
-    void setPin(uint8_t pin, uint8_t value);
+    void setPin(uint8_t pin, bool value);
     
     void setPins(uint16_t map);
 
-    uint8_t getPin(uint8_t pin);
+    bool getPin(uint8_t pin);
 };
 
 #endif

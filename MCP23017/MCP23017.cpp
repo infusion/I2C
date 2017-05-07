@@ -35,17 +35,15 @@ void MCP23017::setPullUpMode(uint8_t pin, uint8_t mode) {
     I2C::writeBit(devId, pin < 8 ? MCP23017_GPPUA : MCP23017_GPPUB, pin % 8, mode);
 }
 
-void MCP23017::setPin(uint8_t pin, uint8_t value) {
+void MCP23017::setPin(uint8_t pin, bool value) {
 
     if (pin >= MCP23017_PINS) {
         return;
     }
 
-    if (value == 0) {
-        values&= ~(1 << pin);
-    } else {
-        values|= 1 << pin;
-    }
+    // Conditional Set/Clear bit
+    values ^= (-value ^ values) & (1 << pin);
+
     I2C::writeByte(devId, pin < 8 ? MCP23017_OLATA : MCP23017_OLATA, ((uint8_t *) &values)[pin < 8 ? 0 : 1]);
 }
 
@@ -54,7 +52,7 @@ void MCP23017::setPins(uint16_t map) { // Update all io pins at once
     I2C::writeBytes(devId, MCP23017_OLATA, (uint8_t *) &values, 2);
 }
 
-uint8_t MCP23017::getPin(uint8_t pin) {
+bool MCP23017::getPin(uint8_t pin) {
 
     if (pin >= MCP23017_PINS) {
         return 0;
