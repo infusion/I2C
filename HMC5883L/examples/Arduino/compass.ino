@@ -24,10 +24,10 @@ void loop() {
 
     int16_t x, y, z;
 
-    // Read raw measure
+    // Read raw measure, we don't need the scaled magnetic field since the direction is the same
     compass.getRawMeasure(&x, &y, &z);
 
-    // Calculate the heading when magnetometer is level (Z-axis is pointing up).
+    // Calculate the heading (azimith) when magnetometer is level (Z-axis is pointing up).
     float headingRad = atan2(y, x);
     float headingDeg;
 
@@ -35,8 +35,8 @@ void loop() {
     // Get your value from http://www.magnetic-declination.com/
     // For Stuttgart, Germany it is +2° 26'
 
-    float declinationAngle = (2.0 + (26.0 / 60.0)) / (180 / PI);
-    headingRad+= declinationAngle;
+    float declination = (2.0 + (26.0 / 60.0)) / (180 / PI);
+    headingRad+= declination;
 
     // Bind angle to [0, 2PI)
     if (headingRad < 0)

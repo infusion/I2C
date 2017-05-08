@@ -4,7 +4,7 @@
 
 #include <I2C.h>
 
-#define HMC5883L_GAUSS_TO_MICROTESLA       100
+#define HMC5883L_GAUSS_TO_MICROTESLA       100.0
 
 // Device Address, there is only one
 #define HMC5883L_ADDRESS             0x1E
@@ -37,9 +37,14 @@
 #define HMC5883L_IDENT_B             0x0B // R
 #define HMC5883L_IDENT_C             0x0C // R
 
+#ifdef USE_HMC5883
+#define HMC5883_TEMP_MSB            0x31 // R
+#define HMC5883_TEMP_LSB            0x32 // R
+#endif
+
 typedef enum {
-    HMC5883L_AVERAGING_1 = 0x00,
-    HMC5883L_AVERAGING_2 = 0x01, // Default
+    HMC5883L_AVERAGING_1 = 0x00, // Default
+    HMC5883L_AVERAGING_2 = 0x01,
     HMC5883L_AVERAGING_4 = 0x02,
     HMC5883L_AVERAGING_8 = 0x03
 } hmc5883l_averaging_t;
@@ -61,14 +66,14 @@ typedef enum {
 } hmc5883l_bias_t;
 
 typedef enum {
-    HMC5883L_GAIN_1370 = 0x00,
-    HMC5883L_GAIN_1090 = 0x01, // Default
-    HMC5883L_GAIN_820 = 0x02,
-    HMC5883L_GAIN_660 = 0x03,
-    HMC5883L_GAIN_440 = 0x04,
-    HMC5883L_GAIN_390 = 0x05,
-    HMC5883L_GAIN_330 = 0x06,
-    HMC5883L_GAIN_230 = 0x07
+    HMC5883L_GAIN_1370 = 0x00 << 5, // ± 0.88 Ga
+    HMC5883L_GAIN_1090 = 0x01 << 5, // ± 1.3 Ga, Default
+    HMC5883L_GAIN_820 = 0x02 << 5, // ± 1.9 Ga
+    HMC5883L_GAIN_660 = 0x03 << 5, // ± 2.5 Ga
+    HMC5883L_GAIN_440 = 0x04 << 5, // ± 4.0 Ga
+    HMC5883L_GAIN_390 = 0x05 << 5, // ± 4.7 Ga
+    HMC5883L_GAIN_330 = 0x06 << 5, // ± 5.6 Ga
+    HMC5883L_GAIN_230 = 0x07 << 5 // ± 8.1 Ga
 } hmc5883l_gain_t;
 
 typedef enum {
@@ -84,7 +89,7 @@ private:
     uint8_t data[6];
     uint8_t mode;
 
-    float scale;
+    float _scaleXY, _scaleZ;
 
 public:
 

@@ -12,14 +12,14 @@ void HMC5883L::init() {
 #endif
 
     I2C::writeByte(devId, HMC5883L_CONFIG_A,
-            // Set number of samples averaged per measurement to 2
-            (HMC5883L_AVERAGING_2 << 5) |
+            // Set number of samples averaged per measurement to 8
+            (HMC5883L_AVERAGING_8 << 5) |
             // Set rate to 15 Hz
             (HMC5883L_DATARATE_15HZ << 2) |
             // Set normal measure bias
             (HMC5883L_BIAS_NORMAL << 0));
 
-    // Set gain 
+    // Set gain to a known level of 1.3 Ga
     setGain(HMC5883L_GAIN_1090);
 
     // Set single mode (which has very low power requirements)
@@ -132,37 +132,42 @@ hmc5883l_bias_t HMC5883L::getMeasureBias() {
  */
 void HMC5883L::setGain(hmc5883l_gain_t gain) {
 
-    // Set xxx in xxx00000
+    // Set xxx in xxx00000 (gain is already aligned)
 
-    I2C::writeByte(devId, HMC5883L_CONFIG_B, gain << 5);
-    
-    // TODO:
-    // Does z need a different scaling?
+    I2C::writeByte(devId, HMC5883L_CONFIG_B, gain);
 
     switch (gain) {
         case HMC5883L_GAIN_1370:
-            scale = 1.0 / 1370.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleXY = 1.0 / 1370.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleZ = 1.0 / 1250.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_1090:
-            scale = 1.0 / 1090.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleXY = 1.0 / 1090.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleZ = 1.0 / 980.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_820:
-            scale = 1.0 / 820.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleXY = 1.0 / 820.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleZ = 1.0 / 700.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_660:
-            scale = 1.0 / 660.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleXY = 1.0 / 660.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleZ = 1.0 / 600.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_440:
-            scale = 1.0 / 440.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleXY = 1.0 / 440.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleZ = 1.0 / 400.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_390:
-            scale = 1.0 / 390.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleXY = 1.0 / 390.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleZ = 1.0 / 250.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_330:
-            scale = 1.0 / 330.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleXY = 1.0 / 330.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleZ = 1.0 / 300.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
         case HMC5883L_GAIN_230:
-            scale = 1.0 / 230.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleXY = 1.0 / 230.0 * HMC5883L_GAUSS_TO_MICROTESLA;
+            _scaleZ = 1.0 / 200.0 * HMC5883L_GAUSS_TO_MICROTESLA;
             break;
     }
 }
@@ -178,7 +183,7 @@ hmc5883l_gain_t HMC5883L::getGain() {
 
     I2C::readByte(devId, HMC5883L_CONFIG_B, data);
 
-    return (hmc5883l_gain_t) GET_BITS_FROM_BYTE(*data, 5, 7);
+    return (hmc5883l_gain_t) *data;
 }
 
 
@@ -241,7 +246,7 @@ void HMC5883L::getRawMeasure(int16_t *x, int16_t *y, int16_t *z) {
 }
 
 /**
- * Gets normalized measure in microtesla (uT)
+ * Gets normalized measure in microtesla (μT)
  * 
  * @param x
  * @param y
@@ -253,9 +258,9 @@ void HMC5883L::getMagneticField(float *x, float *y, float *z) {
 
     getRawMeasure(&_x, &_y, &_z);
 
-    *x = _x * scale;
-    *y = _y * scale;
-    *z = _z * scale;
+    *x = _x * _scaleXY;
+    *y = _y * _scaleXY;
+    *z = _z * _scaleZ;
 }
 
 // Status Register    
