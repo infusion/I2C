@@ -9,9 +9,10 @@ void I2C::sleep(uint16_t d) {
 
 bool I2C::readBit(uint8_t dev, uint8_t reg, uint8_t bit, uint8_t *data) {
 
-    uint8_t count = readByte(dev, reg, data);
-    *data &= 1 << bit;
-    return count == 1;
+    uint8_t prev;
+    bool status = readByte(dev, reg, &prev);
+    *data = prev & (1 << bit);
+    return status;
 }
 
 bool I2C::readByte(uint8_t dev, uint8_t reg, uint8_t *data) {
@@ -28,7 +29,7 @@ bool I2C::readBytes(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length) {
 
     Wire.beginTransmission(dev);
     Wire.write(reg);
-    Wire.endTransmission();
+    Wire.endTransmission(false);
 
     Wire.requestFrom(dev, (uint8_t) length);
 
@@ -54,7 +55,7 @@ bool I2C::readWords(uint8_t dev, uint8_t reg, uint16_t *data, uint8_t length) {
 
     Wire.beginTransmission(dev);
     Wire.write(reg);
-    Wire.endTransmission();
+    Wire.endTransmission(false);
 
     Wire.requestFrom(dev, (uint8_t) (length * 2));
 
@@ -72,28 +73,23 @@ bool I2C::readWords(uint8_t dev, uint8_t reg, uint16_t *data, uint8_t length) {
 }
 
 bool I2C::writeBit(uint8_t dev, uint8_t reg, uint8_t bit, bool data) {
-    uint8_t b;
-    readByte(dev, reg, &b);
+    uint8_t prev;
+    if (!readByte(dev, reg, &prev)) {
+        return false;
+    }
 
     // Conditional bit set
-    b ^= (-data ^ b) & (1 << bit);
+    prev ^= (-data ^ prev) & (1 << bit);
 
-    return writeByte(dev, reg, b);
+    return writeByte(dev, reg, prev);
 }
 
 bool I2C::writeByte(uint8_t dev, uint8_t reg, uint8_t data) {
-    uint8_t status = 0;
-
-    Wire.beginTransmission(dev);
-    Wire.write(reg); // send address
-    Wire.write(data);
-    status = Wire.endTransmission();
-    return status == 0;
+    return writeBytes(dev, reg, &data, 1);
 }
 
 bool I2C::writeBytes(uint8_t dev, uint8_t reg, uint8_t* data, uint8_t length) {
 
-    uint8_t status = 0;
     Wire.beginTransmission(dev);
     Wire.write(reg); // send address
 
@@ -103,25 +99,15 @@ bool I2C::writeBytes(uint8_t dev, uint8_t reg, uint8_t* data, uint8_t length) {
     for (; p < e; p++) {
         Wire.write(p[0]);
     }
-    status = Wire.endTransmission();
-    return status == 0;
+    return 0 == Wire.endTransmission();
 }
 
 bool I2C::writeWord(uint8_t dev, uint8_t reg, uint16_t data) {
-
-    uint8_t status = 0;
-
-    Wire.beginTransmission(dev);
-    Wire.write(reg);
-    Wire.write(((uint8_t *) data)[1]); // send MSB
-    Wire.write(((uint8_t *) data)[0]); // send LSB
-    status = Wire.endTransmission();
-    return status == 0;
+    return writeWords(dev, reg, &data, 1);
 }
 
 bool I2C::writeWords(uint8_t dev, uint8_t reg, uint16_t* data, uint8_t length) {
 
-    uint8_t status = 0;
     Wire.beginTransmission(dev);
     Wire.write(reg); // send address
 
@@ -132,6 +118,5 @@ bool I2C::writeWords(uint8_t dev, uint8_t reg, uint16_t* data, uint8_t length) {
         Wire.write(p[1]); // send MSB
         Wire.write(p[0]); // send LSB
     }
-    status = Wire.endTransmission();
-    return status == 0;
+    return 0 == Wire.endTransmission();
 }
