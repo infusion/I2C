@@ -1,0 +1,13 @@
+{
+    "name": "I2C",
+    "keywords": "i2clib, i2c",
+    "description": "A collection of I2C device drivers",
+    "include": "Arduino/I2C",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/infusion/i2c.git"
+    },
+    "frameworks": "arduino",
+    "platforms": "atmelavr"
+}
+
