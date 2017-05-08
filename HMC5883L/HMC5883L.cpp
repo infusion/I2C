@@ -238,11 +238,13 @@ void HMC5883L::getRawMeasure(int16_t *x, int16_t *y, int16_t *z) {
         I2C::sleep(6);
     }
 
-    I2C::readBytes(devId, HMC5883L_DATA_START, data, 6);
+    uint16_t *wrt = (uint16_t *) data;
 
-    *x = (((int16_t) data[0]) << 8) | data[1];
-    *z = (((int16_t) data[2]) << 8) | data[3];
-    *y = (((int16_t) data[4]) << 8) | data[5];
+    I2C::readWords(devId, HMC5883L_DATA_START, wrt, 3);
+
+    *x = wrt[0];
+    *y = wrt[2];
+    *z = wrt[1];
 }
 
 /**
@@ -293,7 +295,7 @@ bool HMC5883L::getStatusReady() {
  */
 bool HMC5883L::isAlive() {
 
-    if (I2C::readBytes(devId, HMC5883L_IDENT_A, data, 3) == 3) {
+    if (I2C::readBytes(devId, HMC5883L_IDENT_A, data, 3)) {
         return data[0] == 0x48 && data[1] == 0x34 && data[2] == 0x33;
     }
     return false;
