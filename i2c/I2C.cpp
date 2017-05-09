@@ -99,6 +99,14 @@ bool I2C::writeBytes(uint8_t dev, uint8_t reg, uint8_t* data, uint8_t length) {
     for (; p < e; p++) {
         Wire.write(p[0]);
     }
+    /*
+     Return values of Wire.endTransmission()
+     0 - Success
+     1 - Data too long to fit in transmision buffer
+     2 - Received NACK on transmit of address
+     3 - Received NACK on transmit of data
+     4 - Other
+     */
     return 0 == Wire.endTransmission();
 }
 

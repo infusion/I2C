@@ -240,6 +240,7 @@ void HMC5883L::getRawMeasure(int16_t *x, int16_t *y, int16_t *z) {
 
     uint16_t *wrt = (uint16_t *) data;
 
+    // MSB FIRST!
     I2C::readWords(devId, HMC5883L_DATA_START, wrt, 3);
 
     *x = wrt[0];
