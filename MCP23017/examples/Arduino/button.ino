@@ -16,6 +16,6 @@ void setup() {
 }
 
 void loop() {
-  digitalWrite(13, io.getPin(6));
+  digitalWrite(13, io.isPinHigh(6));
   delay(10);
 }

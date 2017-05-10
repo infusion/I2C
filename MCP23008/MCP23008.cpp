@@ -80,13 +80,13 @@ void MCP23008::setPins(uint8_t map) {
  * @param pin
  * @return 
  */
-bool MCP23008::getPin(uint8_t pin) {
+bool MCP23008::isPinHigh(uint8_t pin) {
 
     if (pin >= MCP23008_PINS) {
         return 0;
     }
 
     uint8_t ret;
-    I2C::readByte(devId, MCP23008_GPIO, &ret);
-    return (bool) ((ret >> pin) & 1);
+    I2C::readBit(devId, MCP23008_GPIO, pin, &ret);
+    return (bool) ret;
 }

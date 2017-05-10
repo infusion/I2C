@@ -134,9 +134,9 @@ public:
 
     // Status Register
 
-    bool getStatusLock();
+    bool isStatusLock();
 
-    bool getStatusReady();
+    bool isStatusReady();
 };
 
 #endif

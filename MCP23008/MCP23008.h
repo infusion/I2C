@@ -69,7 +69,7 @@ public:
     
     void setPins(uint8_t map);
 
-    bool getPin(uint8_t pin);
+    bool isPinHigh(uint8_t pin);
 };
 
 #endif

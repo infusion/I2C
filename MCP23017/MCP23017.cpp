@@ -82,17 +82,13 @@ void MCP23017::setPins(uint16_t map) {
  * @param pin
  * @return 
  */
-bool MCP23017::getPin(uint8_t pin) {
+bool MCP23017::isPinHigh(uint8_t pin) {
 
     if (pin >= MCP23017_PINS) {
         return 0;
     }
 
-    uint8_t tmp;
-    I2C::readByte(devId, pin < 8 ? MCP23017_GPIOA : MCP23017_GPIOB, &tmp);
-
-    // If pin >= 8, pin-= 8
-    pin%= 8;
-
-    return (bool) ((tmp >> pin) & 1);
+    uint8_t ret;
+    I2C::readBit(devId, pin < 8 ? MCP23017_GPIOA : MCP23017_GPIOB, pin % 8, &ret);
+    return (bool) ret;
 }

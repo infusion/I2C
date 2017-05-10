@@ -273,7 +273,7 @@ void HMC5883L::getMagneticField(float *x, float *y, float *z) {
  * 
  * @return 
  */
-bool HMC5883L::getStatusLock() {
+bool HMC5883L::isStatusLock() {
     I2C::readBit(devId, HMC5883L_STATUS, HMC5883L_STATUS_LOCK_BIT, data);
     return *data;
 }
@@ -282,7 +282,7 @@ bool HMC5883L::getStatusLock() {
  * Determines if data in registers is ready to be read
  * @return 
  */
-bool HMC5883L::getStatusReady() {
+bool HMC5883L::isStatusReady() {
     I2C::readBit(devId, HMC5883L_STATUS, HMC5883L_STATUS_READY_BIT, data);
     return *data;
 }

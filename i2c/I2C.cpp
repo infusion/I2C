@@ -5,6 +5,9 @@ void I2C::sleep(uint16_t d) {
 #ifdef ARDUINO
     delay(d);
 #endif
+#ifdef RASPBERRY
+    bcm2835_delay(d);
+#endif
 }
 
 bool I2C::readBit(uint8_t dev, uint8_t reg, uint8_t bit, uint8_t *data) {
