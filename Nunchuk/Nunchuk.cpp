@@ -1,12 +1,11 @@
 
 #include <Nunchuk.h>
 
-
 /**
  * Initializes the Nunchuk communication by sending a sequence of bytes
  */
 void Nunchuk::init() {
-    
+
     // Change TWI speed for nuchuk, which uses Fast-TWI (400kHz)
     I2C::setFastMode();
 
@@ -30,13 +29,29 @@ void Nunchuk::init() {
 #endif
 }
 
+#ifdef ARDUINO
+
+/**
+ * Use normal analog ports as power supply, which is useful if you want to have all pins in a row
+ * Like for the famous WiiChuck adapter
+ * @see https://todbot.com/blog/2008/02/18/wiichuck-wii-nunchuck-adapter-available/
+ */
+void Nunchuk::initPower() {
+    // Add power supply for port C2 (GND) and C3 (PWR)
+    PORTC &= ~_BV(PORTC2);
+    PORTC |= _BV(PORTC3);
+    DDRC |= _BV(PORTC2) | _BV(PORTC3);
+    delay(100);
+}
+#endif
+
 /**
  * Central function to read a full chunk of data from Nunchuk
  *
  * @return A boolean if the data transfer was successful
  */
 bool Nunchuk::read() {
-    
+
 #ifdef NUNCHUK_DISABLE_ENCRYPTION
     return I2C::readBytesStop(devId, 0x00, data, 6);
 #else
@@ -51,113 +66,104 @@ bool Nunchuk::read() {
 /**
  * Checks the current state of button Z
  */
-uint8_t Nunchuk::buttonZ() {
+uint8_t Nunchuk::getButtonZ() {
     return (~data[5] >> 0) & 1;
 }
 
 /**
  * Checks the current state of button C
  */
-uint8_t Nunchuk::buttonC() {
+uint8_t Nunchuk::getButtonC() {
     return (~data[5] >> 1) & 1;
 }
 
 /**
  * Retrieves the raw X-value of the joystick
  */
-uint8_t Nunchuk::joystickX_raw() {
+uint8_t Nunchuk::getRawJoystickX() {
     return data[0];
 }
 
 /**
  * Retrieves the raw Y-value of the joystick
  */
-uint8_t Nunchuk::joystickY_raw() {
+uint8_t Nunchuk::getRawJoystickY() {
     return data[1];
 }
 
 /**
  * Retrieves the calibrated X-value of the joystick
  */
-int16_t Nunchuk::joystickX() {
-    return (int16_t) joystickX_raw() - (int16_t) NUNCHUK_JOYSTICK_X_ZERO;
+int16_t Nunchuk::getJoystickX() {
+    return (int16_t) getRawJoystickX() - (int16_t) NUNCHUK_JOYSTICK_X_ZERO;
 }
 
 /**
  * Retrieves the calibrated Y-value of the joystick
  */
-int16_t Nunchuk::joystickY() {
-    return (int16_t) joystickY_raw() - (int16_t) NUNCHUK_JOYSTICK_Y_ZERO;
+int16_t Nunchuk::getJoystickY() {
+    return (int16_t) getRawJoystickY() - (int16_t) NUNCHUK_JOYSTICK_Y_ZERO;
 }
 
 /**
  * Calculates the angle of the joystick
  */
-float Nunchuk::joystick_angle() {
-    return atan2((float) joystickY(), (float) joystickX());
+float Nunchuk::getJoystickAngle() {
+    return atan2((float) getJoystickY(), (float) getJoystickX());
 }
 
 /**
  * Retrieves the raw X-value of the accelerometer
  */
-uint16_t Nunchuk::accelX_raw() {
+uint16_t Nunchuk::getRawAccelX() {
     return ((uint16_t) data[2] << 2) | ((data[5] >> 2) & 3);
 }
 
 /**
  * Retrieves the raw Y-value of the accelerometer
  */
-uint16_t Nunchuk::accelY_raw() {
+uint16_t Nunchuk::getRawAccelY() {
     return ((uint16_t) data[3] << 2) | ((data[5] >> 4) & 3);
 }
 
 /**
  * Retrieves the raw Z-value of the accelerometer
  */
-uint16_t Nunchuk::accelZ_raw() {
+uint16_t Nunchuk::getRawAccelZ() {
     return ((uint16_t) data[4] << 2) | ((data[5] >> 6) & 3);
 }
 
 /**
  * Retrieves the calibrated X-value of the accelerometer
  */
-int16_t Nunchuk::accelX() {
-    return (int16_t) accelX_raw() - (int16_t) NUNCHUK_ACCEL_X_ZERO;
+int16_t Nunchuk::getAccelX() {
+    return (int16_t) getRawAccelX() - (int16_t) NUNCHUK_ACCEL_X_ZERO;
 }
 
 /**
  * Retrieves the calibrated Y-value of the accelerometer
  */
-int16_t Nunchuk::accelY() {
-    return (int16_t) accelY_raw() - (int16_t) NUNCHUK_ACCEL_Y_ZERO;
+int16_t Nunchuk::getAccelY() {
+    return (int16_t) getRawAccelY() - (int16_t) NUNCHUK_ACCEL_Y_ZERO;
 }
 
 /**
  * Retrieves the calibrated Z-value of the accelerometer
  */
-int16_t Nunchuk::accelZ() {
-    return (int16_t) accelZ_raw() - (int16_t) NUNCHUK_ACCEL_Z_ZERO;
+int16_t Nunchuk::getAccelZ() {
+    return (int16_t) getRawAccelZ() - (int16_t) NUNCHUK_ACCEL_Z_ZERO;
 }
 
 /**
  * Calculates the pitch angle of the Nunchuk
  */
-float Nunchuk::pitch() {
-    return atan2((float) accelY(), (float) accelZ());
+float Nunchuk::getPitch() {
+    return atan2((float) getAccelY(), (float) getAccelZ());
 }
 
 /**
  * Calculates the roll angle of the Nunchuk
  */
-float Nunchuk::roll() {
-    return atan2((float) accelX(), (float) accelZ());
+float Nunchuk::getRoll() {
+    return atan2((float) getAccelX(), (float) getAccelZ());
 }
-
-
-
-
-
-
-
-
-

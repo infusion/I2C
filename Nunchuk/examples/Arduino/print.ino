@@ -17,36 +17,36 @@ void loop() {
 
 #ifdef DEBUG
     Serial.print("joy: ");
-    Serial.print(chuk.joystickX());
+    Serial.print(chuk.getJoystickX());
     Serial.print(", ");
-    Serial.print(chuk.joystickY());
+    Serial.print(chuk.getJoystickY());
 
     Serial.print("  acc:");
-    Serial.print(chuk.accelX());
+    Serial.print(chuk.getAccelX());
     Serial.print(", ");
-    Serial.print(chuk.accelY());
+    Serial.print(chuk.getAccelY());
     Serial.print(", ");
-    Serial.print(chuk.accelZ());
+    Serial.print(chuk.getAccelZ());
 
     Serial.print("  but:");
-    Serial.print(chuk.buttonZ());
+    Serial.print(chuk.getButtonZ());
     Serial.print(", ");
-    Serial.print(chuk.buttonC());
+    Serial.print(chuk.getButtonC());
     Serial.print("\n");
 #else
-    Serial.print(chuk.joystickX());
+    Serial.print(chuk.getJoystickX());
     Serial.print(",");
-    Serial.print(chuk.joystickY());
+    Serial.print(chuk.getJoystickY());
     Serial.print(",");
-    Serial.print(chuk.accelX());
+    Serial.print(chuk.getAccelX());
     Serial.print(",");
-    Serial.print(chuk.accelY());
+    Serial.print(chuk.getAccelY());
     Serial.print(",");
-    Serial.print(chuk.accelZ());
+    Serial.print(chuk.getAccelZ());
     Serial.print(",");
-    Serial.print(chuk.buttonZ());
+    Serial.print(chuk.getButtonZ());
     Serial.print(",");
-    Serial.print(chuk.buttonC());
+    Serial.print(chuk.getButtonC());
     Serial.print("\n");
 #endif
     }

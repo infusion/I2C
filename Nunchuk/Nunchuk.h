@@ -22,7 +22,6 @@
 // Print debug information instead of a CSV stream to the serial port
 #define NUNCHUK_DEBUG 1
 
-
 class Nunchuk {
 private:
 
@@ -41,59 +40,30 @@ public:
 
     void init();
 
-    #ifdef ARDUINO
+#ifdef ARDUINO
     void initPower();
-    #endif
+#endif
     bool read();
 
-    uint8_t buttonZ();
-    uint8_t buttonC();
-    uint8_t joystickX_raw();
-    uint8_t joystickY_raw();
-    int16_t joystickX();
-    int16_t joystickY();
-    float joystick_angle();
-    uint16_t accelX_raw();
-    uint16_t accelY_raw();
-    uint16_t accelZ_raw();
-    int16_t accelX() ;
-    int16_t accelY();
-    int16_t accelZ();
-    float pitch();
-    float roll();
+    uint8_t getButtonZ();
+    uint8_t getButtonC();
+
+    uint8_t getRawJoystickX();
+    uint8_t getRawJoystickY();
+
+    int16_t getJoystickX();
+    int16_t getJoystickY();
+    float getJoystickAngle();
+
+    uint16_t getRawAccelX();
+    uint16_t getRawAccelY();
+    uint16_t getRawAccelZ();
+
+    int16_t getAccelX();
+    int16_t getAccelY();
+    int16_t getAccelZ();
+    float getPitch();
+    float getRoll();
 };
 
 #endif
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
