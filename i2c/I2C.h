@@ -33,11 +33,13 @@ public:
     I2C() {
     }
 
+    static void setFastMode();
     static void sleep(uint16_t delay);
 
     static bool readBit(uint8_t dev, uint8_t reg, uint8_t bit, uint8_t *data);
     static bool readByte(uint8_t dev, uint8_t reg, uint8_t *data);
     static bool readBytes(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length);
+    static bool readBytesStop(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length);
     static bool readWord(uint8_t dev, uint8_t reg, uint16_t *data);
     static bool readWords(uint8_t dev, uint8_t reg, uint16_t *data, uint8_t length);
 

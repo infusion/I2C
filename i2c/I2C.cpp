@@ -10,6 +10,24 @@ void I2C::sleep(uint16_t d) {
 #endif
 }
 
+void I2C::setFastMode() {
+    
+#ifdef ARDUINO
+#ifndef CPU_FREQ
+#define CPU_FREQ 16000000L
+#endif
+    
+#ifndef TWI_FREQ
+#define TWI_FREQ 400000L
+#endif
+    
+TWBR = ((CPU_FREQ / TWI_FREQ) - 16) / 2;
+#endif
+    
+    
+    
+}
+
 bool I2C::readBit(uint8_t dev, uint8_t reg, uint8_t bit, uint8_t *data) {
 
     uint8_t prev;
@@ -24,18 +42,37 @@ bool I2C::readByte(uint8_t dev, uint8_t reg, uint8_t *data) {
 }
 
 bool I2C::readBytes(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length) {
-
+    
     int8_t count = 0;
-
+    
     //if (length > BUFFER_LENGTH)
     //    return 0;
-
+    
     Wire.beginTransmission(dev);
     Wire.write(reg);
     Wire.endTransmission(false);
-
+    
     Wire.requestFrom(dev, (uint8_t) length);
+    
+    for (; Wire.available(); count++) {
+        data[count] = Wire.read();
+    }
+    return count == length;
+}
 
+bool I2C::readBytesStop(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length) {
+    
+    int8_t count = 0;
+    
+    //if (length > BUFFER_LENGTH)
+    //    return 0;
+    
+    Wire.beginTransmission(dev);
+    Wire.write(reg);
+    Wire.endTransmission(true);
+    
+    Wire.requestFrom(dev, (uint8_t) length);
+    
     for (; Wire.available(); count++) {
         data[count] = Wire.read();
     }
