@@ -1,0 +1,66 @@
+#######################################
+# Syntax Coloring Map For HMC5843
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+HMC5883L	KEYWORD1
+hmc5843_averaging_t	KEYWORD1
+hmc5843_datarate_t	KEYWORD1
+hmc5843_bias_t		KEYWORD1
+hmc5843_gain_t		KEYWORD1
+hmc5843_mode_t		KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+
+init			KEYWORD2
+isAlive			KEYWORD2
+getSampleAveraging	KEYWORD2
+setSampleAveraging	KEYWORD2
+getDataRate		KEYWORD2
+setDataRate		KEYWORD2
+setMeasureBias		KEYWORD2
+getMeasureBias		KEYWORD2
+getGain			KEYWORD2
+setGain			KEYWORD2
+getMeasureMode		KEYWORD2
+setMeasureMode		KEYWORD2
+getMeasureRaw		KEYWORD2
+getMeasure		KEYWORD2
+getStatusLock		KEYWORD2
+getStatusReady		KEYWORD2
+isRegulatorEnabled	KEYWORD2
+
+
+#######################################
+# Instances (KEYWORD2)
+#######################################
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+
+HMC5843_GAUSS_TO_MICROTESLA	LITERAL1
+HMC5843_ADDRESS		LITERAL1
+HMC5843_CONFIG_A		LITERAL1
+HMC5843_CONFIG_B		LITERAL1
+HMC5843_MODE			LITERAL1
+HMC5843_DATA_MSB_X		LITERAL1
+HMC5843_DATA_LSB_X		LITERAL1
+HMC5843_DATA_MSB_Z		LITERAL1
+HMC5843_DATA_LSB_Z		LITERAL1
+HMC5843_DATA_MSB_Y		LITERAL1 
+HMC5843_DATA_LSB_Y		LITERAL1  
+HMC5843_DATA_START		LITERAL1
+HMC5843_STATUS			LITERAL1
+HMC5843_STATUS_READY_BIT	LITERAL1
+HMC5843_STATUS_LOCK_BIT	LITERAL1
+HMC5843_STATUS_REGULATOR_BIT	LITERAL1
+HMC5843_IDENT_A		LITERAL1
+HMC5843_IDENT_B		LITERAL1
+HMC5843_IDENT_C		LITERAL1
+
+

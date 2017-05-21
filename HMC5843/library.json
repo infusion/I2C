@@ -1,0 +1,22 @@
+{
+    "name": "HMC5843",
+    "version": "1.0.0",
+    "url": "https://github.com/infusion/I2C",
+    "keywords": "HMC5843, magnetometer, compass, magnetic, i2c, sensor",
+    "description": "A driver for 3-Axis digital compass/magnetometer Honeywell HMC5843",
+    "include": "Arduino/HMC5843",
+    "authors": {
+        "name": "Robert Eisele",
+        "email": "robert@xarg.org"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/infusion/I2C.git"
+    },
+    "dependencies": {
+        "name": "I2C",
+        "frameworks": "arduino"
+    },
+    "frameworks": "arduino",
+    "platforms": ["atmelavr", "espressif", "espressif32", "teensy", "linux_arm"]
+}
