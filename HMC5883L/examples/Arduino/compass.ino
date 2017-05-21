@@ -24,7 +24,8 @@ void loop() {
 
     int16_t x, y, z;
 
-    // Read raw measure, we don't need the scaled magnetic field since the direction is the same
+    // Read raw measure, we can use the raw measure and don't need the
+    // scaled magnetic field since the direction is the same
     compass.getRawMeasure(&x, &y, &z);
 
     // Calculate the heading (azimith) when magnetometer is level (Z-axis is pointing up).
@@ -39,10 +40,10 @@ void loop() {
     headingRad+= declination;
 
     // Bind angle to [0, 2PI)
+    // headingRad is in (-PI, PI] because of atan2. Adding small declination doesn't change things much.
+    // That means we must check for negative numbers only
     if (headingRad < 0)
       headingRad+= 2 * PI;
-    if (headingRad > 2 * PI)
-      headingRad-= 2 * PI;
 
     headingDeg = headingRad * 180.0 / PI;
 

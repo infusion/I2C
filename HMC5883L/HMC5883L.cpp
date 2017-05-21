@@ -18,7 +18,7 @@ void HMC5883L::init() {
             (HMC5883L_DATARATE_15HZ << 2) |
             // Set normal measure bias
             (HMC5883L_BIAS_NORMAL << 0));
-
+    
     // Set gain to a known level of 1.3 Ga
     setGain(HMC5883L_GAIN_1090);
 
@@ -233,6 +233,9 @@ hmc5883l_mode_t HMC5883L::getMeasureMode() {
  */
 void HMC5883L::getRawMeasure(int16_t *x, int16_t *y, int16_t *z) {
 
+    // Every read requires to read all registers
+    // That's why having separate x,y,z methods doesn't make much sense
+    
     if (mode == HMC5883L_MODE_SINGLE) {
         I2C::writeByte(devId, HMC5883L_MODE, HMC5883L_MODE_SINGLE);
         I2C::sleep(6);
@@ -291,6 +294,7 @@ bool HMC5883L::isStatusReady() {
 
 /**
  * Check if device is connected and ID register is readable
+ * Both HMC5843 and HMC5883L have "H43" the same value
  * 
  * @return 
  */
