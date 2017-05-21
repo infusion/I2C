@@ -1,6 +1,30 @@
 
 #include <I2C.h>
 
+#ifdef RASPBERRY
+
+int I2C::open(uint8_t num) {
+
+    int fd;
+
+    if ((fd = open("/dev/i2c-1")) < 0) {
+        // Todo handle errors
+        return -1;
+    }
+    return fd;
+}
+
+// When FD is open:
+// ioctl(devId, I2C_SLAVE, i2cAddress);
+//
+// Read:
+// write(devId, {reg}, 1);
+// read(devId, data, 6); // 6 bytes
+// 
+// Write:
+// write(devId, {reg, data}, 1+datalen);
+#endif
+
 void I2C::sleep(uint16_t d) {
 #ifdef ARDUINO
     delay(d);
@@ -11,21 +35,18 @@ void I2C::sleep(uint16_t d) {
 }
 
 void I2C::setFastMode() {
-    
+
 #ifdef ARDUINO
 #ifndef CPU_FREQ
 #define CPU_FREQ 16000000L
 #endif
-    
+
 #ifndef TWI_FREQ
 #define TWI_FREQ 400000L
 #endif
-    
-TWBR = ((CPU_FREQ / TWI_FREQ) - 16) / 2;
+
+    TWBR = ((CPU_FREQ / TWI_FREQ) - 16) / 2;
 #endif
-    
-    
-    
 }
 
 bool I2C::readBit(uint8_t dev, uint8_t reg, uint8_t bit, uint8_t *data) {
@@ -42,18 +63,18 @@ bool I2C::readByte(uint8_t dev, uint8_t reg, uint8_t *data) {
 }
 
 bool I2C::readBytes(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length) {
-    
+
     int8_t count = 0;
-    
+
     //if (length > BUFFER_LENGTH)
     //    return 0;
-    
+
     Wire.beginTransmission(dev);
     Wire.write(reg);
     Wire.endTransmission(false);
-    
+
     Wire.requestFrom(dev, (uint8_t) length);
-    
+
     for (; Wire.available(); count++) {
         data[count] = Wire.read();
     }
@@ -61,18 +82,18 @@ bool I2C::readBytes(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length) {
 }
 
 bool I2C::readBytesStop(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length) {
-    
+
     int8_t count = 0;
-    
+
     //if (length > BUFFER_LENGTH)
     //    return 0;
-    
+
     Wire.beginTransmission(dev);
     Wire.write(reg);
     Wire.endTransmission(true);
-    
+
     Wire.requestFrom(dev, (uint8_t) length);
-    
+
     for (; Wire.available(); count++) {
         data[count] = Wire.read();
     }

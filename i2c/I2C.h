@@ -24,6 +24,12 @@
 #include <pgmspace.h>
 #endif
 
+#ifdef RASPBERRY
+#include <linux/i2c-dev.h>
+#include <sys/ioctl.h>
+#include <fcntl.h>
+#endif
+
 #define GET_BITS_FROM_BYTE(x, a, b) (((x) >> (a)) & ((1 << ((b) - (a) + 1)) - 1))
 #define SET_BITS_IN_BYTE(x, a, b, v) (((x) & ~(((1 << ((b) - (a) + 1)) - 1) << (a))) | (v << (a)))
 
@@ -32,6 +38,10 @@ public:
 
     I2C() {
     }
+
+#ifdef RASPBERRY
+    int I2C::open(uint8_t num);
+#endif
 
     static void setFastMode();
     static void sleep(uint16_t delay);
