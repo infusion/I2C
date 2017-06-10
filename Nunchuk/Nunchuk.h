@@ -20,7 +20,7 @@
 #define NUNCHUK_DISABLE_ENCRYPTION 1
 
 // Print debug information instead of a CSV stream to the serial port
-#define NUNCHUK_DEBUG 1
+//#define NUNCHUK_DEBUG 1
 
 class Nunchuk {
 private:
@@ -30,12 +30,8 @@ private:
 
 public:
 
-    Nunchuk(uint8_t id) {
+    Nunchuk(uint8_t id = NUNCHUK_ADDRESS) {
         devId = id;
-    }
-
-    Nunchuk() {
-        devId = NUNCHUK_ADDRESS;
     }
 
     void init();

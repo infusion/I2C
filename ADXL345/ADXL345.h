@@ -87,11 +87,7 @@ private:
 
 public:
 
-    ADXL345() {
-        devId = ADXL345_ADDRESS;
-    }
-
-    ADXL345(uint8_t id) {
+    ADXL345(uint8_t id = ADXL345_ADDRESS) {
         devId = id;
     }
     void init();

@@ -93,12 +93,8 @@ private:
 
 public:
 
-    HMC5883L(uint8_t id) {
+    HMC5883L(uint8_t id = HMC5883L_ADDRESS) {
         devId = id;
-    }
-
-    HMC5883L() {
-        devId = HMC5883L_ADDRESS;
     }
 
     void init();

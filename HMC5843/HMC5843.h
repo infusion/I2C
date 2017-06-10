@@ -84,12 +84,8 @@ private:
 
 public:
 
-    HMC5843(uint8_t id) {
+    HMC5843(uint8_t id = HMC5843_ADDRESS) {
         devId = id;
-    }
-
-    HMC5843() {
-        devId = HMC5843_ADDRESS;
     }
 
     void init();

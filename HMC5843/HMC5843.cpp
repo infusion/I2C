@@ -10,7 +10,7 @@ void HMC5843::init() {
 #ifdef RASPBERRY
     devId = i2cOpen(1, devId, 0);
 #endif
-    
+
     // The HMC5843 needs 5ms before it will be initialized
     I2C::sleep(5);
 
@@ -214,11 +214,10 @@ void HMC5843::getRawMeasure(int16_t *x, int16_t *y, int16_t *z) {
 
     // MSB FIRST!
     I2C::readWords(devId, HMC5843_DATA_START, wrt, 3);
-
     *x = wrt[0];
     *y = wrt[1];
     *z = wrt[2];
-    
+
     // After a read in single mode, the device turns to sleep mode
     if (mode == HMC5843_MODE_SINGLE) {
         I2C::writeByte(devId, HMC5843_MODE, HMC5843_MODE_SINGLE);

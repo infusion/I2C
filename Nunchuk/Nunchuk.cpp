@@ -16,7 +16,7 @@ void Nunchuk::init() {
     I2C::writeByte(devId, 0x40, 0x00);
 #endif
 
-#if NUNCHUK_DEBUG
+#ifdef NUNCHUK_DEBUG
     Serial.print("Ident: 0x"); // 0xA4200000 for Nunchuck, 0xA4200101 for Classic, 0xA4200402 for Balance
 
     I2C::readBytesStop(devId, 0xFA, data, 6);
@@ -56,7 +56,7 @@ bool Nunchuk::read() {
     return I2C::readBytesStop(devId, 0x00, data, 6);
 #else
     bool status = I2C::readBytesStop(devId, 0x00, data, 6);
-    for (i = 0; i < 6; i++) {
+    for (uint8_t i = 0; i < 6; i++) {
         data[i] = (data[i] ^ 0x17) + 0x17;
     }
     return status;

@@ -27,15 +27,10 @@ void ADXL345::getRawMeasure(int16_t *x, int16_t *y, int16_t *z) {
     int16_t *wrt = (int16_t *) data;
 
     // LSB FIRST!
-    if (I2C::readBytes(devId, ADXL345_DATA_START, data, 6)) {
-        *x = wrt[0];
-        *y = wrt[1];
-        *z = wrt[2];
-    } else {
-        *x = 0;
-        *y = 0;
-        *z = 0;
-    }
+    I2C::readBytes(devId, ADXL345_DATA_START, data, 6);
+    *x = wrt[0];
+    *y = wrt[1];
+    *z = wrt[2];
 }
 
 void ADXL345::getAcceleration(float *x, float *y, float *z) {

@@ -51,12 +51,8 @@ private:
 
 public:
 
-    MCP23017(uint8_t id) {
+    MCP23017(uint8_t id = MCP23017_ADDRESS) {
         devId = id;
-    }
-
-    MCP23017() {
-        devId = MCP23017_ADDRESS;
     }
 
     void init();

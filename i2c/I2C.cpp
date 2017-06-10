@@ -19,7 +19,7 @@ int I2C::open(uint8_t num) {
 //
 // Read:
 // write(devId, {reg}, 1);
-// read(devId, data, 6); // 6 bytes
+// if (read(devId, data, 6) == 6) {} // 6 bytes
 // 
 // Write:
 // write(devId, {reg, data}, 1+datalen);
@@ -52,7 +52,7 @@ void I2C::setFastMode() {
 bool I2C::readBit(uint8_t dev, uint8_t reg, uint8_t bit, uint8_t *data) {
 
     uint8_t prev;
-    bool status = readByte(dev, reg, &prev);
+    bool status = readBytes(dev, reg, &prev, 1);
     *data = prev & (1 << bit);
     return status;
 }
@@ -64,7 +64,7 @@ bool I2C::readByte(uint8_t dev, uint8_t reg, uint8_t *data) {
 
 bool I2C::readBytes(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length) {
 
-    int8_t count = 0;
+    uint8_t *start = data;
 
     //if (length > BUFFER_LENGTH)
     //    return 0;
@@ -75,15 +75,15 @@ bool I2C::readBytes(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length) {
 
     Wire.requestFrom(dev, (uint8_t) length);
 
-    for (; Wire.available(); count++) {
-        data[count] = Wire.read();
+    while (Wire.available()) {
+        *data++ = Wire.read();
     }
-    return count == length;
+    return (data - start) == length;
 }
 
 bool I2C::readBytesStop(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length) {
 
-    int8_t count = 0;
+    uint8_t *start = data;
 
     //if (length > BUFFER_LENGTH)
     //    return 0;
@@ -94,10 +94,10 @@ bool I2C::readBytesStop(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length)
 
     Wire.requestFrom(dev, (uint8_t) length);
 
-    for (; Wire.available(); count++) {
-        data[count] = Wire.read();
+    while (Wire.available()) {
+        *data++ = Wire.read();
     }
-    return count == length;
+    return (data - start) == length;
 }
 
 bool I2C::readWord(uint8_t dev, uint8_t reg, uint16_t *data) {
@@ -108,39 +108,35 @@ bool I2C::readWord(uint8_t dev, uint8_t reg, uint16_t *data) {
 bool I2C::readWords(uint8_t dev, uint8_t reg, uint16_t *data, uint8_t length) {
 
     uint8_t ndx = 1;
-    uint8_t count = 0;
     uint8_t *ptr = (uint8_t *) data;
 
-    //if (length > BUFFER_LENGTH / 2)
+    length*= 2;
+
+    //if (length > BUFFER_LENGTH)
     //    return 0;
 
     Wire.beginTransmission(dev);
     Wire.write(reg);
     Wire.endTransmission(false);
 
-    Wire.requestFrom(dev, (uint8_t) (length * 2));
+    Wire.requestFrom(dev, (uint8_t) length);
 
     while (Wire.available()) {
-
         ptr[ndx] = Wire.read();
         ndx = !ndx;
-
-        if (ndx) {
-            ptr += 2;
-            count++;
-        }
+        ptr+= 2 * ndx;
     }
-    return count == length;
+    return (data + length) == ptr;
 }
 
 bool I2C::writeBit(uint8_t dev, uint8_t reg, uint8_t bit, bool data) {
     uint8_t prev;
-    if (!readByte(dev, reg, &prev)) {
+    if (!readBytes(dev, reg, &prev, 1)) {
         return false;
     }
 
     // Conditional bit set
-    prev ^= (-data ^ prev) & (1 << bit);
+    prev^= (-data ^ prev) & (1 << bit);
 
     return writeByte(dev, reg, prev);
 }
@@ -157,8 +153,8 @@ bool I2C::writeBytes(uint8_t dev, uint8_t reg, uint8_t* data, uint8_t length) {
     uint8_t* p = data;
     uint8_t* e = data + length;
 
-    for (; p < e; p++) {
-        Wire.write(p[0]);
+    while (p < e) {
+        Wire.write(*p++);
     }
     /*
      Return values of Wire.endTransmission()
