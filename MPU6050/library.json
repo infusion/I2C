@@ -1,0 +1,22 @@
+{
+    "name": "MPU6050",
+    "version": "1.0.0",
+    "url": "https://github.com/infusion/I2C",
+    "keywords": "gyroscope, accelerometer, i2c, sensor",
+    "description": "A driver for MPU6050, a 3-axis gyroscope and a 3-axis accelerometer with an integrated Digital Motion Processor(DMP)",
+    "include": "Arduino/MPU6050",
+    "authors": {
+        "name": "Robert Eisele",
+        "email": "robert@xarg.org"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/infusion/I2C.git"
+    },
+    "dependencies": {
+        "name": "I2C",
+        "frameworks": "arduino"
+    },
+    "frameworks": "arduino",
+    "platforms": ["atmelavr", "espressif", "espressif32", "teensy", "linux_arm"]
+}
