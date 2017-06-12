@@ -4,6 +4,8 @@
 
 #include <I2C.h>
 
+#define MPU6050_NOMINAL_GRAVITY    9.80665
+
 // Device Address
 #define MPU6050_ADDRESS_LOW         0x68 // when AD0 pin is low
 #define MPU6050_ADDRESS_HIGH        0x69 // when AD0 pin is high
@@ -115,10 +117,18 @@ public:
         devId = id;
     }
 
+    void init();
+
     void getRawGyro(int16_t *x, int16_t *y, int16_t *z);
     void getRawAccel(int16_t *x, int16_t *y, int16_t *z);
 
-    void init();
+    void getAcceleration(float *_x, float *_y, float *_z);
+    void getRotation(float *_x, float *_y, float *_z);
+
+    float getTemperature();
+
+    void getRawMotion9(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz, int16_t* mx, int16_t* my, int16_t* mz);
+    void getRawMotion6(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz);
 
     bool isAlive();
 
