@@ -30,7 +30,7 @@ void Nunchuk::init() {
 }
 
 #ifdef ARDUINO
-
+#ifndef __AVR_ATmega32U4__ // NOT Arduino Leonardo
 /**
  * Use normal analog ports as power supply, which is useful if you want to have all pins in a row
  * Like for the famous WiiChuck adapter
@@ -43,6 +43,7 @@ void Nunchuk::initPower() {
     DDRC |= _BV(PORTC2) | _BV(PORTC3);
     delay(100);
 }
+#endif
 #endif
 
 /**

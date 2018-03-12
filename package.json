@@ -5,7 +5,7 @@
     "homepage": "https://github.com/infusion/I2C",
     "bugs": "https://github.com/infusion/I2C/issues",
     "description": "An I2C library with loads of drivers shipped with it",
-    "keywords": ["i2c", "mcp23017", "mcp23008", "hmc5883l", "adxl345"],
+    "keywords": ["i2c", "mcp23017", "mcp23008", "hmc5883l", "adxl345", "mpu6050", "nunchuk"],
     "author": "Robert Eisele <robert@xarg.org> (http://www.xarg.org/)",
     "main": "main",
     "private": false,

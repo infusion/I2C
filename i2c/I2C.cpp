@@ -37,15 +37,7 @@ void I2C::sleep(uint16_t d) {
 void I2C::setFastMode() {
 
 #ifdef ARDUINO
-#ifndef CPU_FREQ
-#define CPU_FREQ 16000000L
-#endif
-
-#ifndef TWI_FREQ
-#define TWI_FREQ 400000L
-#endif
-
-    TWBR = ((CPU_FREQ / TWI_FREQ) - 16) / 2;
+    Wire.setClock(400000);
 #endif
 }
 
