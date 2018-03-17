@@ -9,28 +9,30 @@ void Nunchuk::init() {
     // Change TWI speed for nuchuk, which uses Fast-TWI (400kHz)
     I2C::setFastMode();
 
-#ifdef NUNCHUK_DISABLE_ENCRYPTION
-    I2C::writeByte(devId, 0xF0, 0x55);
-    I2C::writeByte(devId, 0xFB, 0x00);
+    // I2C::sleep(1)
+
+#if NUNCHUK_USE_ENCRYPTION
+    I2C::writeByte(devId, 0x40, 0x00); // I2C::sleep(1)
 #else
-    I2C::writeByte(devId, 0x40, 0x00);
+    I2C::writeByte(devId, 0xF0, 0x55); // I2C::sleep(1)
+    I2C::writeByte(devId, 0xFB, 0x00); // I2C::sleep(1)
 #endif
 
-#ifdef NUNCHUK_DEBUG
+#ifdef DEBUG
     Serial.print("Ident: 0x"); // 0xA4200000 for Nunchuck, 0xA4200101 for Classic, 0xA4200402 for Balance
 
-    I2C::readBytesStop(devId, 0xFA, data, 6);
+    I2C::readBytesStop(devId, NUNCHUK_IDENT, data, 6);
     for (uint8_t i = 0; i < 6; i++) {
         Serial.print(data[i], HEX);
     }
     Serial.print("\n");
 
-    delay(1000); // Wait for serial transfer, before loop()ing
+    I2C::sleep(100); // Wait for serial transfer, before loop()ing
 #endif
 }
 
-#ifdef ARDUINO
-#ifndef __AVR_ATmega32U4__ // NOT Arduino Leonardo
+#if defined(__AVR_ATmega168__) || defined(__AVR_ATmega328P__) // Only on Arduino UNO
+
 /**
  * Use normal analog ports as power supply, which is useful if you want to have all pins in a row
  * Like for the famous WiiChuck adapter
@@ -41,9 +43,8 @@ void Nunchuk::initPower() {
     PORTC &= ~_BV(PORTC2);
     PORTC |= _BV(PORTC3);
     DDRC |= _BV(PORTC2) | _BV(PORTC3);
-    delay(100);
+    I2C::sleep(100);
 }
-#endif
 #endif
 
 /**
@@ -52,16 +53,13 @@ void Nunchuk::initPower() {
  * @return A boolean if the data transfer was successful
  */
 bool Nunchuk::read() {
-
-#ifdef NUNCHUK_DISABLE_ENCRYPTION
-    return I2C::readBytesStop(devId, 0x00, data, 6);
-#else
-    bool status = I2C::readBytesStop(devId, 0x00, data, 6);
+    bool status = I2C::readBytesStop(devId, 0x00, data, 6); // maybe add delayMicroseconds(10); after requestFrom()
+#if NUNCHUK_USE_ENCRYPTION
     for (uint8_t i = 0; i < 6; i++) {
         data[i] = (data[i] ^ 0x17) + 0x17;
     }
-    return status;
 #endif
+    return status;
 }
 
 /**
@@ -156,15 +154,15 @@ int16_t Nunchuk::getAccelZ() {
 }
 
 /**
- * Calculates the pitch angle of the Nunchuk
+ * Calculates the pitch angle THETA around y-axis of the Nunchuk
  */
-float Nunchuk::getPitch() {
+float Nunchuk::getPitch() { // tiltY
     return atan2((float) getAccelY(), (float) getAccelZ());
 }
 
 /**
- * Calculates the roll angle of the Nunchuk
+ * Calculates the roll angle PHI around x-axis of the Nunchuk
  */
-float Nunchuk::getRoll() {
+float Nunchuk::getRoll() { // tiltX
     return atan2((float) getAccelX(), (float) getAccelZ());
 }

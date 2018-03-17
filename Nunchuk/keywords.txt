@@ -11,7 +11,28 @@ Nunchuk	KEYWORD1
 # Methods and Functions (KEYWORD2)
 #######################################
 
+init                   KEYWORD2
+read                   KEYWORD2
 
+getButtonZ             KEYWORD2
+getButtonC             KEYWORD2
+
+getRawJoystickX        KEYWORD2
+getRawJoystickY        KEYWORD2
+getJoystickX           KEYWORD2
+getJoystickY           KEYWORD2
+getJoystickAngle       KEYWORD2
+
+getRawAccelX           KEYWORD2
+getRawAccelY           KEYWORD2
+getRawAccelZ           KEYWORD2
+
+getAccelX              KEYWORD2
+getAccelY              KEYWORD2
+getAccelZ              KEYWORD2
+
+getPitch               KEYWORD2
+getRoll                KEYWORD2
 
 #######################################
 # Instances (KEYWORD2)
@@ -21,5 +42,4 @@ Nunchuk	KEYWORD1
 # Constants (LITERAL1)
 #######################################
 
-Nunchuk_ADDRESS            LITERAL1
-
+NUNCHUK_ADDRESS            LITERAL1

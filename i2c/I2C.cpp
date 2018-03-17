@@ -7,11 +7,15 @@ int I2C::open(uint8_t num) {
 
     int fd;
 
-    if ((fd = open("/dev/i2c-1")) < 0) {
+    if ((fd = open("/dev/i2c-1", O_RDWR)) < 0) {
         // Todo handle errors
         return -1;
     }
     return fd;
+}
+
+void I2C::close(fd) {
+    close(fd);
 }
 
 // When FD is open:
@@ -20,7 +24,7 @@ int I2C::open(uint8_t num) {
 // Read:
 // write(devId, {reg}, 1);
 // if (read(devId, data, 6) == 6) {} // 6 bytes
-// 
+//
 // Write:
 // write(devId, {reg, data}, 1+datalen);
 #endif
@@ -84,7 +88,7 @@ bool I2C::readBytesStop(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length)
     Wire.endTransmission(true);
 
     Wire.requestFrom(dev, length);
-
+    // delayMicroseconds(10)
     while (Wire.available()) {
         *data++ = Wire.read();
     }

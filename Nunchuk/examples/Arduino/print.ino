@@ -1,54 +1,55 @@
 
+#include <Wire.h>
 #include <Nunchuk.h>
 
-Nunchuk chuk;
+Nunchuk nc;
 
 void setup() {
 
-    Serial.begin(9600);
+    Serial.begin(115200);
     Wire.begin();
     // chuk.initPower(); // A1 and A2 is power supply
-    chuk.init();
+    nc.init();
 }
 
 void loop() {
 
-    if (chuk.read()) {
+    if (nc.read()) {
 
 #ifdef DEBUG
     Serial.print("joy: ");
-    Serial.print(chuk.getJoystickX());
+    Serial.print(nc.getJoystickX());
     Serial.print(", ");
-    Serial.print(chuk.getJoystickY());
+    Serial.print(nc.getJoystickY());
 
     Serial.print("  acc:");
-    Serial.print(chuk.getAccelX());
+    Serial.print(nc.getAccelX());
     Serial.print(", ");
-    Serial.print(chuk.getAccelY());
+    Serial.print(nc.getAccelY());
     Serial.print(", ");
-    Serial.print(chuk.getAccelZ());
+    Serial.print(nc.getAccelZ());
 
     Serial.print("  but:");
-    Serial.print(chuk.getButtonZ());
+    Serial.print(nc.getButtonZ());
     Serial.print(", ");
-    Serial.print(chuk.getButtonC());
+    Serial.print(nc.getButtonC());
     Serial.print("\n");
 #else
-    Serial.print(chuk.getJoystickX());
+    Serial.print(nc.getJoystickX());
     Serial.print(",");
-    Serial.print(chuk.getJoystickY());
+    Serial.print(nc.getJoystickY());
     Serial.print(",");
-    Serial.print(chuk.getAccelX());
+    Serial.print(nc.getAccelX());
     Serial.print(",");
-    Serial.print(chuk.getAccelY());
+    Serial.print(nc.getAccelY());
     Serial.print(",");
-    Serial.print(chuk.getAccelZ());
+    Serial.print(nc.getAccelZ());
     Serial.print(",");
-    Serial.print(chuk.getButtonZ());
+    Serial.print(nc.getButtonZ());
     Serial.print(",");
-    Serial.print(chuk.getButtonC());
+    Serial.print(nc.getButtonC());
     Serial.print("\n");
 #endif
     }
-    delay(10);
+    delay(50);
 }
