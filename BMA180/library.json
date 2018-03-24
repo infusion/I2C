@@ -1,0 +1,22 @@
+{
+    "name": "BMA180",
+    "version": "1.0.0",
+    "url": "https://github.com/infusion/I2C",
+    "keywords": "BMA180",
+    "description": "A driver for Bosch BMA180",
+    "include": "Arduino/BMA180",
+    "authors": {
+        "name": "Robert Eisele",
+        "email": "robert@xarg.org"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/infusion/I2C.git"
+    },
+    "dependencies": {
+        "name": "I2C",
+        "frameworks": "arduino"
+    },
+    "frameworks": "arduino",
+    "platforms": ["atmelavr", "espressif", "espressif32", "teensy", "linux_arm"]
+}

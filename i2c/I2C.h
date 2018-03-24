@@ -45,6 +45,7 @@ public:
 
     static void setFastMode();
     static void sleep(uint16_t delay);
+    static void usleep(unsigned int d);
 
     static bool readBit(uint8_t dev, uint8_t reg, uint8_t bit, uint8_t *data);
     static bool readByte(uint8_t dev, uint8_t reg, uint8_t *data);
