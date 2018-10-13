@@ -48,7 +48,7 @@ void I2C::usleep(unsigned int d) {
 }
 
 void I2C::setFastMode() {
-
+// Must be called before Wire.begin()!
 #ifdef ARDUINO
     Wire.setClock(400000);
 #endif
@@ -77,7 +77,7 @@ bool I2C::readBytes(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length) {
     Wire.write(reg); // Put slave address in Tx buffer
     Wire.endTransmission(false); // Send Tx buffer and send restart
 
-    Wire.requestFrom(dev, length);
+    Wire.requestFrom(dev, length, (uint8_t) true);
 
     while (Wire.available()) {
         *data++ = Wire.read();
@@ -96,7 +96,7 @@ bool I2C::readBytesStop(uint8_t dev, uint8_t reg, uint8_t *data, uint8_t length)
     Wire.write(reg);
     Wire.endTransmission(true);
 
-    Wire.requestFrom(dev, length);
+    Wire.requestFrom(dev, length, (uint8_t) true);
     // delayMicroseconds(10)
     while (Wire.available()) {
         *data++ = Wire.read();
@@ -123,7 +123,7 @@ bool I2C::readWords(uint8_t dev, uint8_t reg, uint16_t *data, uint8_t length) {
     Wire.write(reg);
     Wire.endTransmission(false);
 
-    Wire.requestFrom(dev, length);
+    Wire.requestFrom(dev, length, (uint8_t) true);
 
 #if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
     while (Wire.available()) {
@@ -135,12 +135,11 @@ bool I2C::readWords(uint8_t dev, uint8_t reg, uint16_t *data, uint8_t length) {
     return length == i;
 }
 
-bool I2C::writeBit(uint8_t dev, uint8_t reg, uint8_t bit, bool data) {
+bool I2C::writeBit(uint8_t dev, uint8_t reg, uint8_t bit, bool value) {
     uint8_t prev;
     readBytes(dev, reg, &prev, 1);
 
-    // Conditional bit set
-    uint8_t val = prev ^ ((-data ^ prev) & (1 << bit));
+    uint8_t val = SET_BIT_IN_BYTE(prev, bit, value);
 
     if (val == prev) {
       return true;

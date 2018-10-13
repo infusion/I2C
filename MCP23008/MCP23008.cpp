@@ -16,7 +16,7 @@ void MCP23008::init() {
 
 /**
  * Sets the mode of a pin to either input or output (OUTPUT = 1, INPUT = 0)
- * 
+ *
  * @param pin
  * @param mode
  */
@@ -26,15 +26,14 @@ void MCP23008::setPinMode(uint8_t pin, uint8_t mode) {
         return;
     }
 
-    // Conditional Set/Clear bit
-    direction ^= (-!mode ^ direction) & (1 << pin);
+    SET_BIT_IN_BYTE_MUTABLE(direction, pin, !mode);
 
     I2C::writeByte(devId, MCP23008_IODIR, direction);
 }
 
 /**
  * Enable or disable pull up resistors (ENABLE = true, DISABLE = false)
- * 
+ *
  * @param pin
  * @param mode
  */
@@ -48,7 +47,7 @@ void MCP23008::setPullUpMode(uint8_t pin, bool mode) {
 
 /**
  * Set a pin high or low
- * 
+ *
  * @param pin
  * @param value
  */
@@ -58,15 +57,14 @@ void MCP23008::setPin(uint8_t pin, bool value) {
         return;
     }
 
-    // Conditional Set/Clear bit
-    values ^= (-value ^ values) & (1 << pin);
+    SET_BIT_IN_BYTE_MUTABLE(values, pin, value);
 
     I2C::writeByte(devId, MCP23008_OLAT, values);
 }
 
 /**
  * Set all pins in one rush using an 8 bit map
- * 
+ *
  * @param map
  */
 void MCP23008::setPins(uint8_t map) {
@@ -76,9 +74,9 @@ void MCP23008::setPins(uint8_t map) {
 
 /**
  * Get the value of an input pin
- * 
+ *
  * @param pin
- * @return 
+ * @return
  */
 bool MCP23008::isPinHigh(uint8_t pin) {
 

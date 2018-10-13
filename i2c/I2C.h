@@ -32,6 +32,9 @@
 
 #define GET_BITS_FROM_BYTE(x, a, b) (((x) >> (a)) & ((1 << ((b) - (a) + 1)) - 1))
 #define SET_BITS_IN_BYTE(x, a, b, v) (((x) & ~(((1 << ((b) - (a) + 1)) - 1) << (a))) | (v << (a)))
+#define SET_BIT_IN_BYTE(prev, pos, value) (prev) ^ ((-(value) ^ (prev)) & (1 << (pos))) 
+#define SET_BIT_IN_BYTE_MUTABLE(dest, pos, value) dest^= (-(value) ^ dest) & (1 << (pos))
+
 
 class I2C {
 public:
