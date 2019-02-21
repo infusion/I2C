@@ -85,7 +85,7 @@ typedef enum {
 class HMC5883L {
 private:
 
-    uint8_t devId;
+    devid_t devId;
     uint8_t data[6];
     uint8_t mode;
 
@@ -93,7 +93,7 @@ private:
 
 public:
 
-    HMC5883L(uint8_t id = HMC5883L_ADDRESS) {
+    HMC5883L(devid_t id = HMC5883L_ADDRESS) {
         devId = id;
     }
 
@@ -127,6 +127,8 @@ public:
     void getRawMeasure(int16_t *x, int16_t *y, int16_t *z);
 
     void getMagneticField(float *x, float *y, float *z);
+
+    float getAzimuth();
 
     // Status Register
 

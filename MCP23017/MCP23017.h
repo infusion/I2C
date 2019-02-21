@@ -45,13 +45,13 @@
 class MCP23017 {
 private:
 
-    uint8_t devId;
+    devid_t devId;
     uint16_t direction = 0;
     uint16_t values = 0;
 
 public:
 
-    MCP23017(uint8_t id = MCP23017_ADDRESS) {
+    MCP23017(devid_t id = MCP23017_ADDRESS) {
         devId = id;
     }
 
@@ -62,7 +62,7 @@ public:
     void setPullUpMode(uint8_t pin, bool mode);
 
     void setPin(uint8_t pin, bool value);
-    
+
     void setPins(uint16_t map);
 
     bool isPinHigh(uint8_t pin);

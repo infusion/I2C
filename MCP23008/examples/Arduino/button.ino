@@ -5,8 +5,6 @@ MCP23008 io;
   
 void setup() {
   
-  Wire.begin();
-
   io.init();
 
   io.setPinMode(6, INPUT);

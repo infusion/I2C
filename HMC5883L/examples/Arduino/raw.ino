@@ -7,9 +7,6 @@ void setup() {
 
     Serial.begin(9600);
 
-    // Inititialize wiring - this isn't done automatically!
-    Wire.begin();
-
     // Initialize compass with default settings
     compass.init();
 

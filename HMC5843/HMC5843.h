@@ -38,7 +38,6 @@
 #define HMC5843_IDENT_B             0x0B // R
 #define HMC5843_IDENT_C             0x0C // R
 
-
 typedef enum {
     HMC5843_DATARATE_0_5HZ = 0x00,
     HMC5843_DATARATE_1HZ = 0x01,
@@ -47,13 +46,13 @@ typedef enum {
     HMC5843_DATARATE_10HZ = 0x04, // Default
     HMC5843_DATARATE_20HZ = 0x05,
     HMC5843_DATARATE_50HZ = 0x06
-} hmc5883l_datarate_t;
+} hmc5883_datarate_t;
 
 typedef enum {
     HMC5843_BIAS_NORMAL = 0x00, // Default
     HMC5843_BIAS_POSITIVE = 0x01,
     HMC5843_BIAS_NEGATIVE = 0x02
-} hmc5883l_bias_t;
+} hmc5883_bias_t;
 
 typedef enum {
     HMC5843_GAIN_1620 = 0x00 << 5, // ± 0.7 Ga
@@ -64,19 +63,19 @@ typedef enum {
     HMC5843_GAIN_460 = 0x05 << 5, // ± 3.8 Ga
     HMC5843_GAIN_390 = 0x06 << 5, // ± 4.5 Ga
     HMC5843_GAIN_280 = 0x07 << 5 // ± 6.5 Ga (Not recommended)
-} hmc5883l_gain_t;
+} hmc5883_gain_t;
 
 typedef enum {
     HMC5843_MODE_CONTINUOUS = 0x00,
     HMC5843_MODE_SINGLE = 0x01, // Default
     HMC5843_MODE_IDLE = 0x02,
-    HMC5843_MODE_SLEEP = 0x03  
-} hmc5883l_mode_t;
+    HMC5843_MODE_SLEEP = 0x03
+} hmc5883_mode_t;
 
 class HMC5843 {
 private:
 
-    uint8_t devId;
+    devid_t devId;
     uint8_t data[6];
     uint8_t mode;
 
@@ -84,7 +83,7 @@ private:
 
 public:
 
-    HMC5843(uint8_t id = HMC5843_ADDRESS) {
+    HMC5843(devid_t id = HMC5843_ADDRESS) {
         devId = id;
     }
 
@@ -94,21 +93,21 @@ public:
 
     // Config A Register
 
-    hmc5883l_datarate_t getDataRate();
-    void setDataRate(hmc5883l_datarate_t rate);
+    hmc5883_datarate_t getDataRate();
+    void setDataRate(hmc5883_datarate_t rate);
 
-    void setMeasureBias(hmc5883l_bias_t bias);
-    hmc5883l_bias_t getMeasureBias();
+    void setMeasureBias(hmc5883_bias_t bias);
+    hmc5883_bias_t getMeasureBias();
 
     // Config B Register
 
-    hmc5883l_gain_t getGain();
-    void setGain(hmc5883l_gain_t gain);
+    hmc5883_gain_t getGain();
+    void setGain(hmc5883_gain_t gain);
 
     // Mode Register
 
-    hmc5883l_mode_t getMeasureMode();
-    void setMeasureMode(hmc5883l_mode_t mode);
+    hmc5883_mode_t getMeasureMode();
+    void setMeasureMode(hmc5883_mode_t mode);
 
     // Data Register
 

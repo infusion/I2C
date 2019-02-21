@@ -1,20 +1,19 @@
 
-#include <Wire.h>
 #include <Nunchuk.h>
 
 Nunchuk nc;
 
 void setup() {
 
-    Serial.begin(115200);
-    Wire.begin();
-    // chuk.initPower(); // A1 and A2 is power supply
-    nc.init();
+  Serial.begin(115200);
+
+  // nc.initPower(); // A1 and A2 is power supply
+  nc.init();
 }
 
 void loop() {
 
-    if (nc.read()) {
+  if (nc.read()) {
 
 #ifdef DEBUG
     Serial.print("joy: ");
@@ -50,6 +49,6 @@ void loop() {
     Serial.print(nc.getButtonC());
     Serial.print("\n");
 #endif
-    }
-    delay(50);
+  }
+  delay(50);
 }

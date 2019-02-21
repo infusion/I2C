@@ -5,8 +5,6 @@ MCP23017 io;
 
 void setup() {
 
-    Wire.begin();
-
     io.init();
 
     io.setPinMode(6, OUTPUT);

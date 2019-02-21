@@ -24,12 +24,12 @@
 class Nunchuk {
 private:
 
-    uint8_t devId;
+    devid_t devId;
     uint8_t data[6];
 
 public:
 
-    Nunchuk(uint8_t id = NUNCHUK_ADDRESS) {
+    Nunchuk(devid_t id = NUNCHUK_ADDRESS) {
         devId = id;
     }
 
