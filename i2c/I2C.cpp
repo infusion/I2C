@@ -158,7 +158,7 @@ bool I2C::writeBit(devid_t dev, uint8_t reg, uint8_t bit, bool value) {
   if (val == prev) {
     return true;
   }
-  return writeByte(dev, reg, prev);
+  return writeByte(dev, reg, val);
 }
 
 bool I2C::writeByte(devid_t dev, uint8_t reg, uint8_t data) {
