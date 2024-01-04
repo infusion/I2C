@@ -1,4 +1,4 @@
-
+#define RASPBERRY
 
 #ifndef _I2C_H
 #define _I2C_H
@@ -25,38 +25,48 @@
 #endif
 
 #ifdef RASPBERRY
+#define I2CADDR "/dev/i2c-1"
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <math.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <error.h>
+#include <errno.h>
 #include <linux/i2c-dev.h>
 #include <sys/ioctl.h>
-#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 #endif
 
 #define GET_BITS_FROM_BYTE(x, a, b) (((x) >> (a)) & ((1 << ((b) - (a) + 1)) - 1))
 #define SET_BITS_IN_BYTE(x, a, b, v) (((x) & ~(((1 << ((b) - (a) + 1)) - 1) << (a))) | (v << (a)))
-#define SET_BIT_IN_BYTE(prev, pos, value) (prev) ^ ((-(value) ^ (prev)) & (1 << (pos))) 
-#define SET_BIT_IN_BYTE_MUTABLE(dest, pos, value) dest^= (-(value) ^ dest) & (1 << (pos))
-
-#ifdef RASPBERRY
-typedef int devid_t;
-#else
+#define SET_BIT_IN_BYTE(prev, pos, value) ((prev) ^ ((-(value) ^ (prev)) & (1 << (pos))))
+#define SET_BIT_IN_BYTE_CONST(prev, pos, value) (((prev) & ~(1 << (pos))) | ((value) << (pos)))
+#define SET_BIT_IN_BYTE_MUTABLE(dest, pos, value) dest ^= (-(value) ^ dest) & (1 << (pos))
 
 typedef uint8_t devid_t;
+
+class I2C
+{
+public:
+#ifdef RASPBERRY
+    static int fd;
 #endif
 
-class I2C {
-public:
-
-    I2C() {
+    I2C()
+    {
     }
 
-#ifdef RASPBERRY
-    static void I2C::close(int fd);
-#endif
-    
-    static devid_t init(devid_t num);
+    static void init();
+    static void close();
 
     static void setFastMode();
-    static void sleep(uint16_t delay);
-    static void usleep(unsigned int d);
+    static void delay(uint16_t delay);
+    static void udelay(unsigned int d);
 
     static bool readBit(devid_t dev, uint8_t reg, uint8_t bit, uint8_t *data);
     static bool readByte(devid_t dev, uint8_t reg, uint8_t *data);
@@ -71,5 +81,7 @@ public:
     static bool writeWord(devid_t dev, uint8_t reg, uint16_t data);
     static bool writeWords(devid_t dev, uint8_t reg, uint16_t *data, uint8_t length);
 };
+
+int I2C::fd = -1;
 
 #endif

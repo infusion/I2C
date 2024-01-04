@@ -6,7 +6,7 @@
  */
 void MCP23008::init() {
 
-  devId = I2C::init(devId);
+  I2C::init();
 
   I2C::writeByte(devId, MCP23008_IODIR, 0x00); // set all pins on bank A to OUTPUT
   I2C::writeByte(devId, MCP23008_GPPU, 0x00); // deactivate all pull up resistors on bank A

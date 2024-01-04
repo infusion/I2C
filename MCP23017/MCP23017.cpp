@@ -6,7 +6,7 @@
  */
 void MCP23017::init() {
 
-  devId = I2C::init(devId);
+  I2C::init();
 
   // Attention: In the following, writeWord is used, even if it has wrong byte order!
   // It's okay, since we set all bits to the same value

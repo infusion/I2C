@@ -7,7 +7,7 @@
  */
 void BMA180::init() {
 
-  devId = I2C::init(devId);
+  I2C::init();
 
   // Do a soft reset
   softReset();
@@ -71,7 +71,7 @@ void BMA180::setRange(bma180_range_t rng) {
 
 void BMA180::softReset() {
   I2C::writeByte(devId, BMA180_RESET, 0xB6);
-  I2C::sleep(1); // No serial communication for 10us after soft_reset
+  I2C::delay(1); // No serial communication for 10us after soft_reset
 }
 
 void BMA180::getRawMeasure(int16_t *x, int16_t *y, int16_t *z) {
@@ -132,7 +132,7 @@ void BMA180::calibrate(uint16_t samples, uint16_t delayMS) {
 
   getRawMeasure(&x, &y, &z);
   for (uint16_t i = 0; i < samples; i++) {
-    delay(delayMS);
+    I2C::delay(delayMS);
     getRawMeasure(&x, &y, &z);
 
     minX = x < minX ? x : minX;

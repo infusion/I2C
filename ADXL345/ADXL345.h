@@ -7,8 +7,6 @@
 // Device Address
 #define ADXL345_ADDRESS      0x53  // ALT high=0x1D
 
-#define ADXL345_EARTH_GRAVITY_MS2   9.80665 // m/s^2
-
 #define ADXL345_DEVID               0x00    // R,   Device ID
 #define ADXL345_THRESH_TAP          0x1D    // R/W, Tap threshold
 #define ADXL345_OFSX                0x1E    // R/W, X-axis offset
@@ -82,12 +80,16 @@ typedef enum {
 
 class ADXL345 {
 private:
-    uint8_t devId;
+    devid_t devId;
     uint8_t data[6];
+
+    int16_t offsetX;
+    int16_t offsetY;
+    int16_t offsetZ;
 
 public:
 
-    ADXL345(uint8_t id = ADXL345_ADDRESS) {
+    ADXL345(devid_t id = ADXL345_ADDRESS) {
         devId = id;
     }
     void init();
@@ -100,7 +102,7 @@ public:
     void getAcceleration(float *x, float *y, float *z);
 
     bool isAlive();
-
+    // setRange(16)
     void setDataRate(adxl345_data_rate_t rate);
     void setDataRateLowPower(adxl345_data_rate_t rate);
     adxl345_data_rate_t getDataRate();

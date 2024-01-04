@@ -3,11 +3,11 @@
 
 /**
  * Set up compass for general usage with default settings
- * 
+ *
  */
 void HMC5843::init() {
 
-  devId = I2C::init(devId);
+  I2C::init();
 
   // The HMC5843 needs 5ms before it will be initialized
   I2C::sleep(5);
@@ -29,7 +29,7 @@ void HMC5843::init() {
 
 /**
  * Sets data rate for continues mode
- * 
+ *
  * @param dataRate
  */
 void HMC5843::setDataRate(hmc5883_datarate_t rate) {
@@ -55,8 +55,8 @@ void HMC5843::setDataRate(hmc5883_datarate_t rate) {
 
 /**
  * Get the current data rate
- * 
- * @return 
+ *
+ * @return
  */
 hmc5883_datarate_t HMC5843::getDataRate() {
 
@@ -69,7 +69,7 @@ hmc5883_datarate_t HMC5843::getDataRate() {
 
 /**
  * Set the measurement bias
- * 
+ *
  * @param bias
  */
 void HMC5843::setMeasureBias(hmc5883_bias_t bias) {
@@ -82,8 +82,8 @@ void HMC5843::setMeasureBias(hmc5883_bias_t bias) {
 
 /**
  * Get current measurement bias
- * 
- * @return 
+ *
+ * @return
  */
 hmc5883_bias_t HMC5843::getMeasureBias() {
 
@@ -99,7 +99,7 @@ hmc5883_bias_t HMC5843::getMeasureBias() {
 
 /**
  * Set magnetic field gain value
- * 
+ *
  * @param gain
  */
 void HMC5843::setGain(hmc5883_gain_t gain) {
@@ -146,8 +146,8 @@ void HMC5843::setGain(hmc5883_gain_t gain) {
 
 /**
  * Get current gain setting
- * 
- * @return 
+ *
+ * @return
  */
 hmc5883_gain_t HMC5843::getGain() {
 
@@ -163,7 +163,7 @@ hmc5883_gain_t HMC5843::getGain() {
 
 /**
  * Sets the current meassurement mode
- * 
+ *
  * @param newMode
  */
 void HMC5843::setMeasureMode(hmc5883_mode_t newMode) {
@@ -181,8 +181,8 @@ void HMC5843::setMeasureMode(hmc5883_mode_t newMode) {
 
 /**
  * Gets the current meassurement mode
- * 
- * @return 
+ *
+ * @return
  */
 hmc5883_mode_t HMC5843::getMeasureMode() {
 
@@ -198,7 +198,7 @@ hmc5883_mode_t HMC5843::getMeasureMode() {
 
 /**
  * Get the three axis heading measurement
- * 
+ *
  * @param x
  * @param y
  * @param z
@@ -225,7 +225,7 @@ void HMC5843::getRawMeasure(int16_t *x, int16_t *y, int16_t *z) {
 
 /**
  * Gets normalized measure in microtesla (μT)
- * 
+ *
  * @param x
  * @param y
  * @param z
@@ -236,6 +236,8 @@ void HMC5843::getMagneticField(float *x, float *y, float *z) {
 
   getRawMeasure(&_x, &_y, &_z);
 
+  // Default scale = 0.92mG/digit -> scale = 0.00092 => x * scale in Gauss
+  // Earth magetic field ranges from 0.25 to 0.65 Gauss
   *x = _x * _scaleXY;
   *y = _y * _scaleXY;
   *z = _z * _scaleZ;
@@ -243,19 +245,19 @@ void HMC5843::getMagneticField(float *x, float *y, float *z) {
 
 /**
  * Gets the azimuth in degree
- * 
- * @return 
+ *
+ * @return
  */
 float HMC5843::getAzimuth() {
   return 0;
 }
 
-// Status Register    
+// Status Register
 
 /**
  * Determines if the data registers are locked
- * 
- * @return 
+ *
+ * @return
  */
 bool HMC5843::isStatusLock() {
   I2C::readBit(devId, HMC5843_STATUS, HMC5843_STATUS_LOCK_BIT, data);
@@ -264,7 +266,7 @@ bool HMC5843::isStatusLock() {
 
 /**
  * Determines if data in registers is ready to be read
- * @return 
+ * @return
  */
 bool HMC5843::isStatusReady() {
   I2C::readBit(devId, HMC5843_STATUS, HMC5843_STATUS_READY_BIT, data);
@@ -273,7 +275,7 @@ bool HMC5843::isStatusReady() {
 
 /**
  * Determines if the internal voltage regulator is enabled
- * @return 
+ * @return
  */
 bool HMC5843::isRegulatorEnabled() {
   I2C::readBit(devId, HMC5843_STATUS, HMC5843_STATUS_REN_BIT, data);
@@ -286,8 +288,8 @@ bool HMC5843::isRegulatorEnabled() {
 /**
  * Check if device is connected and ID register is readable
  * Both HMC5843 and HMC5843 have "H43" the same value
- * 
- * @return 
+ *
+ * @return
  */
 bool HMC5843::isAlive() {
 

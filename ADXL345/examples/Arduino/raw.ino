@@ -5,8 +5,6 @@ ADXL345 accel;
 
 void setup() {
 
-    Wire.begin();
-
     Serial.begin(38400);
 
     accel.init();

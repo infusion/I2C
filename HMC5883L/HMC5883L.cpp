@@ -3,11 +3,11 @@
 
 /**
  * Set up compass for general usage with default settings
- * 
+ *
  */
 void HMC5883L::init() {
 
-  devId = I2C::init(devId);
+  I2C::init();
 
   I2C::writeByte(devId, HMC5883L_CONFIG_A,
           // Set number of samples averaged per measurement to 8
@@ -28,7 +28,7 @@ void HMC5883L::init() {
 
 /**
  * Set the number of samples that get averaged
- * 
+ *
  * @param samples
  */
 void HMC5883L::setSampleAveraging(hmc5883l_averaging_t samples) {
@@ -41,8 +41,8 @@ void HMC5883L::setSampleAveraging(hmc5883l_averaging_t samples) {
 
 /**
  * Get the current number of samples averaged
- * 
- * @return 
+ *
+ * @return
  */
 hmc5883l_averaging_t HMC5883L::getSampleAveraging() {
 
@@ -55,7 +55,7 @@ hmc5883l_averaging_t HMC5883L::getSampleAveraging() {
 
 /**
  * Sets data rate for continues mode
- * 
+ *
  * @param dataRate
  */
 void HMC5883L::setDataRate(hmc5883l_datarate_t rate) {
@@ -81,8 +81,8 @@ void HMC5883L::setDataRate(hmc5883l_datarate_t rate) {
 
 /**
  * Get the current data rate
- * 
- * @return 
+ *
+ * @return
  */
 hmc5883l_datarate_t HMC5883L::getDataRate() {
 
@@ -95,7 +95,7 @@ hmc5883l_datarate_t HMC5883L::getDataRate() {
 
 /**
  * Set the measurement bias
- * 
+ *
  * @param bias
  */
 void HMC5883L::setMeasureBias(hmc5883l_bias_t bias) {
@@ -108,8 +108,8 @@ void HMC5883L::setMeasureBias(hmc5883l_bias_t bias) {
 
 /**
  * Get current measurement bias
- * 
- * @return 
+ *
+ * @return
  */
 hmc5883l_bias_t HMC5883L::getMeasureBias() {
 
@@ -125,7 +125,7 @@ hmc5883l_bias_t HMC5883L::getMeasureBias() {
 
 /**
  * Set magnetic field gain value
- * 
+ *
  * @param gain
  */
 void HMC5883L::setGain(hmc5883l_gain_t gain) {
@@ -172,8 +172,8 @@ void HMC5883L::setGain(hmc5883l_gain_t gain) {
 
 /**
  * Get current gain setting
- * 
- * @return 
+ *
+ * @return
  */
 hmc5883l_gain_t HMC5883L::getGain() {
 
@@ -189,7 +189,7 @@ hmc5883l_gain_t HMC5883L::getGain() {
 
 /**
  * Sets the current meassurement mode
- * 
+ *
  * @param newMode
  */
 void HMC5883L::setMeasureMode(hmc5883l_mode_t newMode) {
@@ -207,8 +207,8 @@ void HMC5883L::setMeasureMode(hmc5883l_mode_t newMode) {
 
 /**
  * Gets the current meassurement mode
- * 
- * @return 
+ *
+ * @return
  */
 hmc5883l_mode_t HMC5883L::getMeasureMode() {
 
@@ -224,7 +224,7 @@ hmc5883l_mode_t HMC5883L::getMeasureMode() {
 
 /**
  * Get the three axis heading measurement
- * 
+ *
  * @param x
  * @param y
  * @param z
@@ -250,7 +250,7 @@ void HMC5883L::getRawMeasure(int16_t *x, int16_t *y, int16_t *z) {
 
 /**
  * Gets normalized measure in microtesla (μT)
- * 
+ *
  * @param x
  * @param y
  * @param z
@@ -268,19 +268,19 @@ void HMC5883L::getMagneticField(float *x, float *y, float *z) {
 
 /**
  * Gets the azimuth in degree
- * 
- * @return 
+ *
+ * @return
  */
 float HMC5883L::getAzimuth() {
   return 0;
 }
 
-// Status Register    
+// Status Register
 
 /**
  * Determines if the data registers are locked
- * 
- * @return 
+ *
+ * @return
  */
 bool HMC5883L::isStatusLock() {
   I2C::readBit(devId, HMC5883L_STATUS, HMC5883L_STATUS_LOCK_BIT, data);
@@ -289,7 +289,7 @@ bool HMC5883L::isStatusLock() {
 
 /**
  * Determines if data in registers is ready to be read
- * @return 
+ * @return
  */
 bool HMC5883L::isStatusReady() {
   I2C::readBit(devId, HMC5883L_STATUS, HMC5883L_STATUS_READY_BIT, data);
@@ -301,13 +301,13 @@ bool HMC5883L::isStatusReady() {
 /**
  * Check if device is connected and ID register is readable
  * Both HMC5843 and HMC5883L have "H43" the same value
- * 
- * @return 
+ *
+ * @return
  */
 bool HMC5883L::isAlive() {
 
   if (I2C::readBytes(devId, HMC5883L_IDENT_A, data, 3)) {
-    return data[0] == 0x48 && data[1] == 0x34 && data[2] == 0x33;
+    return data[0] == 'H' && data[1] == '4' && data[2] == '3';
   }
   return false;
 }
