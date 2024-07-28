@@ -123,7 +123,8 @@ bool I2C::readBytes(devid_t dev, uint8_t reg, uint8_t *data, uint8_t length)
     return false;
   }
 
-  write(fd, &reg, 1);
+  data[0] = reg;
+  write(fd, data, 1);
 
   if (read(fd, data, length) != length)
   {
@@ -177,9 +178,9 @@ bool I2C::readWord(devid_t dev, uint8_t reg, uint16_t *data)
  */
 bool I2C::readWords(devid_t dev, uint8_t reg, uint16_t *data, uint8_t length)
 {
+#ifdef ARDUINO
   length *= 2;
 
-#ifdef ARDUINO
   uint8_t i = 0;
   uint8_t *ptr = (uint8_t *)data;
 
@@ -210,15 +211,17 @@ bool I2C::readWords(devid_t dev, uint8_t reg, uint16_t *data, uint8_t length)
     printf("%s\n", strerror(errno));
     return false;
   }
-  write(fd, &reg, 1);
 
-  if (read(fd, data, length) != length)
-  {
+  data[0] = reg;
+  if (write(fd, data, 1) < 1) {
+    return false;
+  }
+
+  if (read(fd, data, length * 2) != (length * 2)) {
     printf("%s\n", strerror(errno));
     return false;
   }
-  for (uint8_t i = 0; i < length; i += 2)
-  {
+  for (uint8_t i = 0; i < length; i++) {
     *((uint16_t *)(data + i)) = __builtin_bswap16(*((uint16_t *)(data + i)));
   }
   return true;
@@ -263,8 +266,12 @@ bool I2C::writeByte(devid_t dev, uint8_t reg, uint8_t data)
     printf("%s\n", strerror(errno));
     return false;
   }
-  write(fd, &reg, 1);
-  if (write(fd, &data, 1) < 1)
+
+  uint8_t buf[2];
+  buf[0] = reg;
+  buf[1] = data;
+
+  if (write(fd, buf, 2) < 2)
   {
     return false;
   }
@@ -306,7 +313,14 @@ bool I2C::writeBytes(devid_t dev, uint8_t reg, uint8_t *data, uint8_t length)
     printf("%s\n", strerror(errno));
     return false;
   }
-  write(fd, &reg, 1);
+
+  uint8_t buf[1];
+  buf[0] = reg;
+
+  if (write(fd, buf, 1) < 1) {
+    return false;
+  }
+
   if (write(fd, data, length) < length)
   {
     return false;
@@ -348,6 +362,6 @@ bool I2C::writeWords(devid_t dev, uint8_t reg, uint16_t *data, uint8_t length)
 #endif
 
 #ifdef RASPBERRY
-//#error "writeWords is not implemented for raspberry"
+// #error "writeWords is not implemented for raspberry"
 #endif
 }

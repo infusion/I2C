@@ -1,0 +1,22 @@
+###################################
+# Syntax Coloring Map For MCP4251
+###################################
+
+###################################
+# Datatypes (KEYWORD1)
+###################################
+MCP4251 KEYWORD1
+
+###################################
+# Methods and Functions (KEYWORD2)
+###################################
+
+begin   KEYWORD2
+setValue      KEYWORD2
+setResistance KEYWORD2
+
+###################################
+# Constants (LITERAL1)
+###################################
+MCP4251_CALIBRATE_A LITERAL1
+MCP4251_CALIBRATE_B LITERAL1

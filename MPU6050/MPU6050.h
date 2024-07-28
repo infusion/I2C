@@ -4,8 +4,6 @@
 
 #include <I2C.h>
 
-#define MPU6050_NOMINAL_GRAVITY    9.80665
-
 // Device Address
 #define MPU6050_ADDRESS_LOW         0x68 // when AD0 pin is low
 #define MPU6050_ADDRESS_HIGH        0x69 // when AD0 pin is high
@@ -26,7 +24,6 @@
 #define MPU6050_GYRO_ZOFFS_L      0x18
 
 #define MPU6050_CONFIG            0x1A
-
 #define MPU6050_GYRO_CONFIG       0x1B // Gyroscope Configuration
 #define MPU6050_ACCEL_CONFIG      0x1C // Accelerometer Configuration
 
@@ -42,9 +39,9 @@
 
 #define MPU6050_INT_STATUS        0x3A
 
-#define MPU6050_ACCEL_START      0x3B // 0x3B - 0x40
+#define MPU6050_ACCEL_START       0x3B // 0x3B - 0x40
 #define MPU6050_TEMP_START        0x41 // 0x41 - 0x42
-#define MPU6050_GYRO_START       0x43   // 0x43 - 0x48
+#define MPU6050_GYRO_START        0x43   // 0x43 - 0x48
 
 #define MPU6050_MOT_DETECT_STATUS 0x61
 #define MPU6050_MOT_DETECT_CTRL   0x69
@@ -53,7 +50,7 @@
 #define MPU6050_PWR_MGMT_1        0x6B // Power Management 1
 #define MPU6050_WHO_AM_I          0x75 // Who Am I
 
-#define MPU6050_DEVICE_ID           0x34
+#define MPU6050_DEVICE_ID         0x68
 
 typedef enum {
     MPU6050_CLOCK_KEEP_RESET = 7,
@@ -108,12 +105,18 @@ typedef enum {
 class MPU6050 {
 private:
 
-    uint8_t devId;
+    devid_t devId;
     uint8_t data[22];
+
+    float offGX;
+    float offGY;
+    float offGZ;
 
 public:
 
-    MPU6050(uint8_t id = MPU6050_ADDRESS) {
+    uint16_t caliCounter;
+
+    MPU6050(devid_t id = MPU6050_ADDRESS) {
         devId = id;
     }
 
@@ -131,6 +134,12 @@ public:
     void getRawMotion6(int16_t* ax, int16_t* ay, int16_t* az, int16_t* gx, int16_t* gy, int16_t* gz);
 
     bool isAlive();
+
+    void setAccRange(mpu6050_range_t range);
+    void setGyrRange(mpu6050_dps_t range);
+
+    void calibrate();
+    void getMotion6(float *_ax, float *_ay, float *_az, float *_gx, float *_gy, float *_gz);
 
 };
 

@@ -1,0 +1,22 @@
+{
+  "name": "MCP4251",
+  "version": "1.0.0",
+  "url": "https://github.com/infusion/I2C",
+  "keywords": "MCP4251, spi, potentiometer, digipot, digital pot",
+  "description": "A driver for digital potentiometer MCP4251",
+  "include": "Arduino/MCP4251",
+  "authors": {
+      "name": "Robert Eisele",
+      "email": "robert@xarg.org"
+  },
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/infusion/I2C.git"
+  },
+  "dependencies": {
+      "name": "I2C",
+      "frameworks": "arduino"
+  },
+  "frameworks": "arduino",
+  "platforms": ["atmelavr", "espressif", "espressif32", "teensy", "linux_arm"]
+}
