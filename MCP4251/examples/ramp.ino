@@ -11,7 +11,6 @@ void setup() {
     digitalWrite(MCP4251_CS_PIN, HIGH);
 
     SPI.begin();
-    SPI.setClockDivider(SPI_CLOCK_DIV16); // 1 MHz
 }
 
 uint8_t channel = 0; // Pot 0

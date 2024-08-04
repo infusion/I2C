@@ -3,21 +3,17 @@
 
 MCP4251 digipot;
 
-// What pot and what value
-uint8_t channel = 0; // Pot 0
-uint8_t level = 144;
-
 void setup() {
 
     pinMode(MCP4251_CS_PIN, OUTPUT);
     digitalWrite(MCP4251_CS_PIN, HIGH);
 
     SPI.begin();
-    SPI.setClockDivider(SPI_CLOCK_DIV16); // 1 MHz
 
     delay(100);
 
-    MCP4251.setValue(channel, level);
+    digipot.setValue(0, 144); // Set pot 0 to 144/511
+    digipot.setValue(1, 0);   // Set pot 1 to 0/511
 }
 
 void loop() {
